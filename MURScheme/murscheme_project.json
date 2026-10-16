@@ -1,0 +1,1133 @@
+{
+  "gridStep": 24,
+  "angleSnap": 45,
+  "smoothCurve": true,
+  "currentTool": "paint",
+  "zoom": 0.7973436829561599,
+  "panX": 985.5521695328393,
+  "panY": 525.8163210219811,
+  "activeLineId": null,
+  "activeDecorId": null,
+  "selectedStationId": "st-1791738222874",
+  "selectedTransferId": null,
+  "selectedTerrainLabelId": null,
+  "selectedTerminalId": null,
+  "globalStyles": {
+    "fontFamily": "Nunito, sans-serif",
+    "labelAngle": 315,
+    "labelColor": "#0f172a",
+    "fontSize": 12,
+    "lineWidth": 6.5,
+    "shadowMode": "none",
+    "canvasBg": "#ffffff",
+    "substrateImageUrl": "",
+    "substrateOpacity": 0.85,
+    "labelPos": "top-right"
+  },
+  "terminalsSettings": {
+    "autoGenerate": true,
+    "titleText": "",
+    "attach": "track-exact",
+    "offsetDist": 0,
+    "offsetSide": "auto",
+    "align": "vertical",
+    "badgeStyle": "square",
+    "badgeSize": 9.5,
+    "badgeBorder": "border",
+    "borderMode": "none",
+    "borderColor": "#0f172a",
+    "borderWidth": 1.8,
+    "bgMode": "contrast",
+    "bgColor": "#e2e8f0",
+    "overlapMode": "replace-station"
+  },
+  "legend": {
+    "show": true,
+    "x": 899,
+    "y": -314,
+    "title": "Трамвайные маршруты",
+    "subtitle": "",
+    "template": "table",
+    "columns": 1,
+    "logoType": "none",
+    "logoSymbol": "🚋",
+    "logoImageUrl": "",
+    "angle": 0,
+    "titleFontSize": 15,
+    "fontSize": 12,
+    "width": 320,
+    "autoHeight": true,
+    "opacity": 0.94,
+    "bgColor": "#ffffff",
+    "borderWidth": 1.5,
+    "borderColor": "#cbd5e1",
+    "radius": 8,
+    "notes": [
+      {
+        "id": "not-1",
+        "icon": "",
+        "text": "Интервал движения маршрутов: 5–15 мин."
+      },
+      {
+        "id": "not-2",
+        "icon": "",
+        "text": "Пересадка на станции метро Муроморска"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "id": "line-1791737855264",
+      "name": "Т1",
+      "subname": "",
+      "color": "#ED1B24",
+      "width": 6.5,
+      "opacity": 1,
+      "shadow": false,
+      "offset": 0,
+      "dashStyle": "solid",
+      "badgeText": "1",
+      "points": [
+        {
+          "x": 288,
+          "y": 744
+        },
+        {
+          "x": 288,
+          "y": 240
+        },
+        {
+          "x": 288,
+          "y": 144
+        },
+        {
+          "x": 672,
+          "y": -240
+        },
+        {
+          "x": 672,
+          "y": -288
+        }
+      ]
+    },
+    {
+      "id": "line-1791737874304",
+      "name": "Т2",
+      "subname": "",
+      "color": "#0078BF",
+      "width": 6.5,
+      "opacity": 1,
+      "shadow": false,
+      "offset": 0,
+      "dashStyle": "solid",
+      "badgeText": "2",
+      "points": [
+        {
+          "x": -696,
+          "y": -144
+        },
+        {
+          "x": -581,
+          "y": -29
+        },
+        {
+          "x": -221,
+          "y": -29
+        },
+        {
+          "x": 51,
+          "y": 243
+        },
+        {
+          "x": 1152,
+          "y": 240
+        }
+      ]
+    },
+    {
+      "id": "line-1791737881316",
+      "name": "Т3",
+      "subname": "",
+      "color": "#009A49",
+      "width": 6.5,
+      "opacity": 1,
+      "shadow": false,
+      "offset": 0,
+      "dashStyle": "solid",
+      "badgeText": "3",
+      "points": [
+        {
+          "x": -72,
+          "y": -192
+        },
+        {
+          "x": 144,
+          "y": 24
+        },
+        {
+          "x": 144,
+          "y": 192
+        },
+        {
+          "x": 432,
+          "y": 480
+        },
+        {
+          "x": 648,
+          "y": 480
+        },
+        {
+          "x": 720,
+          "y": 552
+        }
+      ]
+    },
+    {
+      "id": "line-1791737894205",
+      "name": "Т4",
+      "subname": "",
+      "color": "#F58220",
+      "width": 6.5,
+      "opacity": 1,
+      "shadow": false,
+      "offset": 0.5,
+      "dashStyle": "rail-ties",
+      "badgeText": "4",
+      "points": [
+        {
+          "x": 1152,
+          "y": 240
+        },
+        {
+          "x": 48,
+          "y": 240
+        },
+        {
+          "x": -264,
+          "y": 552
+        },
+        {
+          "x": -336,
+          "y": 552
+        }
+      ]
+    },
+    {
+      "id": "line-1791925108817",
+      "name": "Т5",
+      "subname": "",
+      "color": "#7B2C8C",
+      "width": 6.5,
+      "opacity": 1,
+      "shadow": false,
+      "offset": 1,
+      "dashStyle": "solid",
+      "badgeText": "5",
+      "points": [
+        {
+          "x": 1152,
+          "y": 240
+        },
+        {
+          "x": 672,
+          "y": 240
+        },
+        {
+          "x": 604,
+          "y": 308
+        },
+        {
+          "x": 604,
+          "y": 356
+        },
+        {
+          "x": 628,
+          "y": 356
+        },
+        {
+          "x": 844,
+          "y": 356
+        }
+      ]
+    }
+  ],
+  "stations": [
+    {
+      "id": "st-1791737936946",
+      "name": "Кишбург",
+      "x": 288,
+      "y": 240,
+      "style": "interchange-borderless",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737855264",
+        "line-1791737894205",
+        "line-1791737874304"
+      ]
+    },
+    {
+      "id": "st-1791737937960",
+      "name": "Савватеево",
+      "x": 288,
+      "y": 336,
+      "style": "interchange-borderless",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "bottom-left",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737855264",
+        "line-1791737881316"
+      ]
+    },
+    {
+      "id": "st-1791737939070",
+      "name": "Окская",
+      "x": 192,
+      "y": 240,
+      "style": "interchange-borderless",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "bottom-left",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737881316",
+        "line-1791737894205",
+        "line-1791737874304"
+      ]
+    },
+    {
+      "id": "st-1791738142708",
+      "name": "Остановка 4",
+      "x": 144,
+      "y": 120,
+      "style": "interchange-borderless",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737881316"
+      ]
+    },
+    {
+      "id": "st-1791738144145",
+      "name": "Остановка 5",
+      "x": 120,
+      "y": 0,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737881316"
+      ]
+    },
+    {
+      "id": "st-1791738145915",
+      "name": "Остановка 6",
+      "x": 0,
+      "y": -120,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737881316"
+      ]
+    },
+    {
+      "id": "st-1791738147214",
+      "name": "Остановка 7",
+      "x": -96,
+      "y": -192,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737881316"
+      ]
+    },
+    {
+      "id": "st-1791738149485",
+      "name": "Остановка 8",
+      "x": 312,
+      "y": 120,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-left",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737855264"
+      ]
+    },
+    {
+      "id": "st-1791738150432",
+      "name": "Остановка 9",
+      "x": 408,
+      "y": 48,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-left",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737855264"
+      ]
+    },
+    {
+      "id": "st-1791738151338",
+      "name": "Остановка 10",
+      "x": 504,
+      "y": -72,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-left",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737855264"
+      ]
+    },
+    {
+      "id": "st-1791738152142",
+      "name": "Остановка 11",
+      "x": 624,
+      "y": -168,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-left",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737855264"
+      ]
+    },
+    {
+      "id": "st-1791738154404",
+      "name": "Остановка 12",
+      "x": 672,
+      "y": -288,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737855264"
+      ]
+    },
+    {
+      "id": "st-1791738156700",
+      "name": "Остановка 13",
+      "x": -24,
+      "y": 168,
+      "style": "interchange-borderless",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737874304"
+      ]
+    },
+    {
+      "id": "st-1791738157314",
+      "name": "Остановка 14",
+      "x": -120,
+      "y": 96,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737874304"
+      ]
+    },
+    {
+      "id": "st-1791738158542",
+      "name": "Остановка 15",
+      "x": -192,
+      "y": -24,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737874304"
+      ]
+    },
+    {
+      "id": "st-1791738159092",
+      "name": "Остановка 16",
+      "x": -312,
+      "y": -24,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737874304"
+      ]
+    },
+    {
+      "id": "st-1791738159706",
+      "name": "Остановка 17",
+      "x": -456,
+      "y": -24,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737874304"
+      ]
+    },
+    {
+      "id": "st-1791738160589",
+      "name": "Остановка 18",
+      "x": -624,
+      "y": -48,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737874304"
+      ]
+    },
+    {
+      "id": "st-1791738161638",
+      "name": "Остановка 19",
+      "x": -696,
+      "y": -144,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737874304"
+      ]
+    },
+    {
+      "id": "st-1791738164185",
+      "name": "Остановка 20",
+      "x": -336,
+      "y": 528,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737894205"
+      ]
+    },
+    {
+      "id": "st-1791738165559",
+      "name": "Остановка 22",
+      "x": -192,
+      "y": 480,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-left",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737894205"
+      ]
+    },
+    {
+      "id": "st-1791738167099",
+      "name": "Остановка 24",
+      "x": -96,
+      "y": 408,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-left",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737894205"
+      ]
+    },
+    {
+      "id": "st-1791738168133",
+      "name": "Остановка 25",
+      "x": -24,
+      "y": 312,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737894205"
+      ]
+    },
+    {
+      "id": "st-1791738222268",
+      "name": "Остановка 26",
+      "x": 456,
+      "y": 240,
+      "style": "metro-tick",
+      "colorMode": "stripes",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737894205",
+        "line-1791737874304"
+      ]
+    },
+    {
+      "id": "st-1791738222874",
+      "name": "Остановка 27",
+      "x": 720,
+      "y": 240,
+      "style": "metro-tick",
+      "colorMode": "stripes",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737894205",
+        "line-1791925108817",
+        "line-1791737874304"
+      ]
+    },
+    {
+      "id": "st-1791738224755",
+      "name": "Остановка 28",
+      "x": 912,
+      "y": 240,
+      "style": "metro-tick",
+      "colorMode": "stripes",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737894205",
+        "line-1791925108817",
+        "line-1791737874304"
+      ]
+    },
+    {
+      "id": "st-1791738225772",
+      "name": "Гоголевская",
+      "x": 1176,
+      "y": 240,
+      "style": "metro-tick",
+      "colorMode": "stripes",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737874304",
+        "line-1791737894205",
+        "line-1791925108817"
+      ]
+    },
+    {
+      "id": "st-1791738228058",
+      "name": "Остановка 30",
+      "x": 720,
+      "y": 552,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737881316"
+      ]
+    },
+    {
+      "id": "st-1791738229258",
+      "name": "Остановка 31",
+      "x": 600,
+      "y": 456,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737881316"
+      ]
+    },
+    {
+      "id": "st-1791738230212",
+      "name": "Остановка 32",
+      "x": 480,
+      "y": 480,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737881316"
+      ]
+    },
+    {
+      "id": "st-1791738236750",
+      "name": "Остановка 33",
+      "x": 384,
+      "y": 432,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737881316"
+      ]
+    },
+    {
+      "id": "st-1791738238219",
+      "name": "Остановка 34",
+      "x": 288,
+      "y": 432,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "bottom-left",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737855264"
+      ]
+    },
+    {
+      "id": "st-1791738239086",
+      "name": "Остановка 35",
+      "x": 288,
+      "y": 528,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737855264"
+      ]
+    },
+    {
+      "id": "st-1791738239871",
+      "name": "Остановка 36",
+      "x": 288,
+      "y": 624,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737855264"
+      ]
+    },
+    {
+      "id": "st-1791738240536",
+      "name": "Остановка 37",
+      "x": 288,
+      "y": 744,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791737855264"
+      ]
+    },
+    {
+      "id": "st-1791925209483",
+      "name": "Остановка 36",
+      "x": 744,
+      "y": 360,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top-right",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791925108817"
+      ]
+    },
+    {
+      "id": "st-1791925210671",
+      "name": "Остановка 37",
+      "x": 624,
+      "y": 288,
+      "style": "metro-tick",
+      "colorMode": "line",
+      "tickShift": "opposite",
+      "customColor": "#ffffff",
+      "labelPos": "bottom-left",
+      "labelAngle": 315,
+      "tickLen": 9,
+      "isTerminal": false,
+      "termPrefix": "ДС «",
+      "termAlign": "beside",
+      "lineIds": [
+        "line-1791925108817"
+      ]
+    }
+  ],
+  "terminals": [],
+  "transfers": [
+    {
+      "id": "tr-1791737996266",
+      "stationIds": [
+        "st-1791737939070",
+        "st-1791737937960",
+        "st-1791737936946"
+      ],
+      "style": "circle-gradient-borderless",
+      "curvature": 25,
+      "dashLength": 5,
+      "dashGap": 4,
+      "dashWidth": 3.5,
+      "dashColor": "#0f172a"
+    },
+    {
+      "id": "tr-1791925184826",
+      "stationIds": [
+        "st-1791738156700",
+        "st-1791738142708"
+      ],
+      "style": "radial-arc-borderless",
+      "curvature": 1,
+      "dashLength": 5,
+      "dashGap": 4,
+      "dashWidth": 3.5,
+      "dashColor": "#0f172a"
+    }
+  ],
+  "decorations": [
+    {
+      "id": "dec-1791787977797",
+      "name": "Ул. Коммунарская",
+      "type": "highway",
+      "color": "#f8fafc",
+      "width": 8,
+      "opacity": 0.95,
+      "shadow": false,
+      "showLabel": true,
+      "labelText": "Ул. Коммунарская",
+      "labelColor": "#64748b",
+      "labelSize": 10,
+      "repeatLabel": true,
+      "labelInterval": 500,
+      "crossingMode": "bridge",
+      "points": [
+        {
+          "x": -918,
+          "y": 486
+        },
+        {
+          "x": -894,
+          "y": 486
+        },
+        {
+          "x": -966,
+          "y": 486
+        },
+        {
+          "x": -966,
+          "y": 174
+        },
+        {
+          "x": -864,
+          "y": 72
+        },
+        {
+          "x": -768,
+          "y": 72
+        },
+        {
+          "x": -576,
+          "y": 72
+        },
+        {
+          "x": 816,
+          "y": 72
+        }
+      ]
+    },
+    {
+      "id": "dec-1791788269516",
+      "name": "Захарово шоссе",
+      "type": "highway",
+      "color": "#f8fafc",
+      "width": 8,
+      "opacity": 0.95,
+      "shadow": false,
+      "showLabel": true,
+      "labelText": "Захарово шоссе",
+      "labelColor": "#64748b",
+      "labelSize": 10,
+      "repeatLabel": false,
+      "labelInterval": 260,
+      "crossingMode": "bridge",
+      "points": [
+        {
+          "x": -936,
+          "y": -72
+        },
+        {
+          "x": -744,
+          "y": -72
+        },
+        {
+          "x": -422,
+          "y": 250
+        },
+        {
+          "x": -422,
+          "y": 778
+        },
+        {
+          "x": -422,
+          "y": 802
+        }
+      ]
+    }
+  ],
+  "terrainLayers": [
+    {
+      "id": "tlayer-water",
+      "name": "Вода (Акватории)",
+      "color": "#2a557a",
+      "visible": true,
+      "cells": {}
+    },
+    {
+      "id": "tlayer-green",
+      "name": "Растительность (Парки)",
+      "color": "#2d5538",
+      "visible": true,
+      "cells": {}
+    },
+    {
+      "id": "tlayer-ground",
+      "name": "Земля (Острова)",
+      "color": "#ede8d8",
+      "visible": true,
+      "cells": {}
+    }
+  ],
+  "activeLayerId": "tlayer-water",
+  "paintMode": "bucket",
+  "brushRadius": 2,
+  "terrainStyle": "smooth",
+  "terrainLabels": [],
+  "isPanning": false,
+  "startPanX": 839.9557840464458,
+  "startPanY": 625.1487720409307,
+  "draggingVertex": null,
+  "draggingStation": null,
+  "draggingTerminal": null,
+  "draggingLegend": false,
+  "draggingTerrainLabel": null,
+  "legendDragOffset": {
+    "x": 0,
+    "y": 0
+  },
+  "tempPoints": [],
+  "transferSelection": []
+}
