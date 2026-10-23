@@ -6,7 +6,10 @@
   <title>MURScheme — Редактор транспортных схем MURS</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='36' fill='%230f172a' stroke='%2338bdf8' stroke-width='6'/%3E%3Cpath d='M28 26 L40 18 L48 28' fill='none' stroke='%2338bdf8' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M72 26 L60 18 L52 28' fill='none' stroke='%2338bdf8' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='52' r='25' fill='none' stroke='%2338bdf8' stroke-width='6'/%3E%3Cpath d='M34 52 Q34 40 45 42 Q49 52 40 68 L24 82' fill='none' stroke='%2338bdf8' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M66 52 Q66 40 55 42 Q51 52 60 68 L76 82' fill='none' stroke='%2338bdf8' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
 
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+
   <style>
+
     /* =========================================================================
        1. ПЕРЕМЕННЫЕ И БАЗОВЫЕ СТИЛИ
        ========================================================================= */
@@ -416,6 +419,9 @@
     .map-transfer-element:hover { filter: drop-shadow(0 0 5px rgba(0, 136, 255, 0.7)); }
     .map-decor-label { font-weight: 800; text-transform: uppercase; pointer-events: none; }
     .terminal-group-element { cursor: pointer; }
+    .selected-halo {
+    filter: drop-shadow(0 0 6px #0088ff) drop-shadow(0 0 2px #38bdf8);
+    }
 
     #debug-console-drawer {
       position: fixed;
@@ -480,7 +486,7 @@
         <path d="M66 52 Q66 40 55 42 Q51 52 60 68 L76 82" fill="none" stroke="#38bdf8" stroke-width="6" stroke-linecap="round"/>
       </svg>
       <span>MURScheme</span>
-      <span style="font-size: 10.5px; background: #232732; padding: 2px 6px; border-radius: 4px; color: #38bdf8;">beta</span>
+      <span style="font-size: 10.5px; background: #232732; padding: 2px 6px; border-radius: 4px; color: #38bdf8;">beta 2</span>
     </div>
 
     <div class="top-controls">
@@ -502,10 +508,6 @@
         <option value="0">Свободно</option>
       </select>
 
-      <button class="btn" id="btn-toggle-smooth">
-        <span id="smooth-icon">〰️</span> <span id="smooth-text">Скругление: Вкл</span>
-      </button>
-
       <select id="line-draw-mode-select" style="padding: 4px 6px; background:#1b2230; font-weight:800; border:1px solid var(--accent); color:#fff;" title="Тип объекта для инструмента трассировки">
         <option value="transit">🚇 Линия ОТ</option>
         <option value="rail">🛤️ Декорация: Линия ЖД</option>
@@ -519,17 +521,34 @@
       <!-- Пружина-разделитель: прижимает кнопки проекта и скачивания к правому краю -->
       <div style="margin-left: auto;"></div>
 
-      <button class="btn" id="btn-save-project">💾 Сохранить</button>
-      <button class="btn" id="btn-load-project">📂 Загрузить</button>
-      <input type="file" id="file-input-project" accept=".json" style="display: none;">
+      <!-- Меню Проекта (Сохранение / Загрузка) -->
+      <div class="export-menu-container" id="project-menu-container">
+        <button class="btn" id="btn-project-menu-toggle">💾 Проект ▾</button>
+        <div class="export-dropdown-panel" id="project-dropdown-panel">
+          <div style="font-size: 11.5px; font-weight: 900; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 6px;">
+            🗂️ Сохранение и загрузка схемы
+          </div>
+          <div class="field-row">
+            <span class="field-label">Имя файла:</span>
+            <input type="text" id="project-filename-input" value="murscheme_project" style="width: 170px;">
+          </div>
+          <button class="btn btn-primary" id="btn-save-project" style="width: 100%; justify-content: center;">💾 Скачать .json</button>
+          <button class="btn" id="btn-load-project" style="width: 100%; justify-content: center;">📂 Загрузить .json</button>
+          <input type="file" id="file-input-project" accept=".json" style="display: none;">
+        </div>
+      </div>
 
       <!-- Выпадающее меню экспорта в кнопке «Скачать» -->
       <div class="export-menu-container" id="export-menu-container">
         <button class="btn btn-primary" id="btn-export-menu-toggle">📥 Скачать ▾</button>
-
         <div class="export-dropdown-panel" id="export-dropdown-panel">
           <div style="font-size: 11.5px; font-weight: 900; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 6px;">
             ⚙️ Параметры экспорта схемы
+          </div>
+
+          <div class="field-row">
+            <span class="field-label">Имя файла:</span>
+            <input type="text" id="export-filename-input" value="MURScheme_view" style="width: 170px;">
           </div>
 
           <div class="field-row">
@@ -548,8 +567,10 @@
             <span class="field-label">Качество:</span>
             <select id="export-scale-select" style="width: 170px;">
               <option value="1">1x (Стандарт)</option>
-              <option value="2" selected>2x (Full HD / 2K)</option>
-              <option value="4">4x (Ultra HD / 4K)</option>
+              <option value="2" selected>2x (2K)</option>
+              <option value="4">4x (4K)</option>
+              <option value="8">8x (8K)</option>
+              <option value="16">16x (16K)</option>
             </select>
           </div>
 
@@ -561,7 +582,6 @@
               <option value="jpg">JPG (Фото)</option>
               <option value="jxl">JXL</option>
               <option value="svg">Векторный SVG</option>
-              <option value="json">Данные data.json</option>
             </select>
           </div>
 
@@ -579,7 +599,7 @@
     <div class="toolbar-left">
       <button class="tool-btn active" id="tool-select" data-tooltip="Выбор и перемещение по карте ЛКМ (V)">👆</button>
       <button class="tool-btn" id="tool-line" data-tooltip="Добавить участок трассы к линии (L)">🚇</button>
-      <button class="tool-btn" id="tool-station" data-tooltip="Поставить независимую остановку (S)">⚪</button>
+      <button class="tool-btn" id="tool-station" data-tooltip="Поставить остановку (S)">⚪</button>
       <button class="tool-btn" id="tool-transfer" data-tooltip="Создать пересадку между остановками (X)">⇄</button>
       <button class="tool-btn" id="tool-decor" data-tooltip="Декоративные пути: ЖД, белое шоссе (D)">🛤️</button>
       <button class="tool-btn" id="tool-paint" data-tooltip="Окрашивание местности: Кисть, Заливка (B)">🖌️</button>
@@ -710,10 +730,16 @@
                 </div>
                 <div id="line-branches-list" style="display:flex; flex-direction:column; gap:4px; max-height:90px; overflow-y:auto;"></div>
               </div>
-              <button class="btn btn-primary" id="btn-build-from-stations" style="background:#0284c7; border-color:#0284c7;">
-                ⚡ Проложить трассу через остановки линии
+            <div style="border-top:1px solid #282d38; padding-top:6px; display:flex; flex-direction:column; gap:6px;">
+              <div class="field-row">
+                <span class="field-label">Шаг авто-остановок (px):</span>
+                <input type="number" id="auto-stations-step" value="120" min="24" max="1000" step="12" style="width:70px;">
+              </div>
+              <button class="btn btn-primary" id="btn-auto-place-stations" style="background:#0284c7; border-color:#0284c7; justify-content:center;">
+                ⚡ Расставить остановки автоматически
               </button>
               <button class="btn btn-danger" id="btn-delete-line">Удалить линию</button>
+         </div>
             </div>
 
             <!-- Свойства остановки -->
@@ -754,7 +780,7 @@
               </div>
               <div class="field-row" id="row-station-custom-color" style="display:none;">
                 <span class="field-label">Свой цвет засечки:</span>
-                <input type="color" id="prop-station-custom-color" value="#ffffff">
+                <input type="color" id="prop-station-custom-color" value="#000000">
               </div>
               <div class="field-row">
                 <span class="field-label">Положение подписи:</span>
@@ -768,6 +794,17 @@
                   <option value="right">Справа (→)</option>
                   <option value="left">Слева (←)</option>
                 </select>
+              </div>
+              <div class="field-row">
+                <span class="field-label">Вторичная подпись:</span>
+                <div style="display:flex; gap:4px; align-items:center;">
+                  <input type="text" id="prop-station-subname" placeholder="English name" style="width: 140px;">
+                  <button class="btn" id="btn-translate-station" title="Перевести через Google" style="padding:4px 6px;">🌐</button>
+                </div>
+              </div>
+              <div class="field-row">
+                <span class="field-label">Цвет вторичной подписи:</span>
+                <input type="color" id="prop-station-subcolor" value="#94a3b8">
               </div>
 
               <div style="border-top:1px solid #282d38; padding-top:6px;">
@@ -889,6 +926,17 @@
                 <input type="text" id="prop-tlabel-text" style="width:175px;">
               </div>
               <div class="field-row">
+                <span class="field-label">Вторичная надпись:</span>
+                <div style="display:flex; gap:4px; align-items:center;">
+                  <input type="text" id="prop-tlabel-subtext" placeholder="BALTIC SEA" style="width:140px;">
+                  <button class="btn" id="btn-translate-tlabel" title="Перевести" style="padding:4px 6px;">🌐</button>
+                </div>
+              </div>
+              <div class="field-row">
+                <span class="field-label">Цвет вторичного текста:</span>
+                <input type="color" id="prop-tlabel-subcolor" value="#94a3b8">
+              </div>
+              <div class="field-row">
                 <span class="field-label">Угол поворота: <b id="prop-tlabel-angle-val">0°</b></span>
                 <input type="range" id="prop-tlabel-angle-input" min="0" max="360" step="5" value="0" style="width:110px;">
               </div>
@@ -912,6 +960,17 @@
               <div class="field-row">
                 <span class="field-label">Название:</span>
                 <input type="text" id="prop-term-name" placeholder="Название конечной (или пусто)" style="width: 175px;">
+              </div>
+              <div class="field-row">
+                <span class="field-label">Вторичная подпись:</span>
+                <div style="display:flex; gap:4px; align-items:center;">
+                  <input type="text" id="prop-term-subname" placeholder="English title" style="width:140px;">
+                  <button class="btn" id="btn-translate-term-manual" title="Перевести" style="padding:4px 6px;">🌐</button>
+                </div>
+              </div>
+              <div class="field-row">
+                <span class="field-label">Цвет вторичной подписи:</span>
+                <input type="color" id="prop-term-subcolor" value="#94a3b8">
               </div>
               <div class="field-row">
                 <span class="field-label">Ориентация значков:</span>
@@ -948,8 +1007,7 @@
           <div class="accordion-body">
             <span style="font-size:11px; color:var(--text-muted);">Маршруты сети и терминалы</span>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin: 4px 0 8px 0;">
-              <button class="btn btn-primary" id="btn-add-line" style="justify-content:center; padding: 5px 6px; font-size: 11px;">+ Линия</button>
-              <button class="btn btn-primary" id="btn-add-manual-terminal" style="justify-content:center; padding: 5px 6px; font-size: 11px; background:#0284c7; border-color:#0284c7;">+ Конечный терминал</button>
+              <button class="btn btn-primary" id="btn-add-line" style="width:100%; justify-content:center;">+ Линия</button>
             </div>
             <div id="lines-list-container" style="display:flex; flex-direction:column; gap:5px;"></div>
           </div>
@@ -963,14 +1021,18 @@
           </div>
           <div class="accordion-body">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:11px; color:var(--text-muted);">Независимые станции сети</span>
+              <span style="font-size:11px; color:var(--text-muted);">Cтанции сети</span>
               <button class="btn btn-primary" id="btn-add-station-quick" style="padding:2px 7px; font-size:11px;">+ Остановка</button>
             </div>
+            <input type="text" id="station-search-input" placeholder="🔍 Поиск остановки по названию..." style="width:100%; margin: 2px 0;">
             <div id="stations-list-container" style="display:flex; flex-direction:column; gap:4px; max-height:120px; overflow-y:auto;"></div>
 
             <!-- Расширенные настройки конечных терминалов -->
             <div style="border-top:1px solid #282d38; padding-top:8px; display:flex; flex-direction:column; gap:6px;">
-              <div style="font-size:11.5px; font-weight:800; color:var(--accent);">🏁 Конечные терминалы:</div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="font-size:11.5px; font-weight:800; color:var(--accent);">🏁 Конечные терминалы:</div>
+                <button class="btn btn-primary" id="btn-add-manual-terminal" style="padding:2px 7px; font-size:10.5px; background:#0284c7; border-color:#0284c7;">+ Конечный терминал</button>
+              </div>
 
               <div class="field-row">
                 <span class="field-label">Авто-формирование на концах:</span>
@@ -980,6 +1042,17 @@
               <div class="field-row">
                 <span class="field-label">Название конечной:</span>
                 <input type="text" id="term-title-input" placeholder="Пусто (без подписи)" style="width:160px;">
+              </div>
+              <div class="field-row">
+                <span class="field-label">Вторичная подпись:</span>
+                <div style="display:flex; gap:4px; align-items:center;">
+                  <input type="text" id="term-subtitle-input" placeholder="English title" style="width:130px;">
+                  <button class="btn" id="btn-translate-term-auto" title="Перевести" style="padding:4px 6px;">🌐</button>
+                </div>
+              </div>
+              <div class="field-row">
+                <span class="field-label">Цвет вторичной подписи:</span>
+                <input type="color" id="term-subtitle-color" value="#94a3b8">
               </div>
 
               <div class="field-row">
@@ -1182,10 +1255,10 @@
               <input type="range" id="brush-radius-input" min="1" max="8" value="2" style="width:110px;">
             </div>
             <div class="color-swatch-grid">
-              <button class="swatch-btn" style="background: #2a557a;" onclick="setTerrainPalettePreset('#2a557a', 'Вода')">🌊 Вода (Море/Река)</button>
-              <button class="swatch-btn" style="background: #2d5538;" onclick="setTerrainPalettePreset('#2d5538', 'Растительность')">🌲 Растительность (Парк)</button>
-              <button class="swatch-btn" style="background: #ede8d8; color:#1e293b; text-shadow:none;" onclick="setTerrainPalettePreset('#ede8d8', 'Земля')">🏝️ Земля (Светло-желтый)</button>
-              <button class="swatch-btn" style="background: #a8d5e5; color:#0f172a; text-shadow:none;" onclick="setTerrainPalettePreset('#a8d5e5', 'Вода (Мель)')">💧 Вода (Мелководье)</button>
+              <button class="swatch-btn" style="background: #a3c9e2; color:#1e293b; text-shadow:none;" onclick="setTerrainPalettePreset('#a3c9e2', 'Вода')">🌊 Вода</button>
+              <button class="swatch-btn" style="background: #c2e2c0; color:#1e293b; text-shadow:none;" onclick="setTerrainPalettePreset('#c2e2c0', 'Парк')"> Парк</button>
+              <button class="swatch-btn" style="background: #f3ede2; color:#1e293b; text-shadow:none;" onclick="setTerrainPalettePreset('#f3ede2', 'Земля')"> Земля</button>
+              <button class="swatch-btn" style="background: #d4eaf5; color:#1e293b; text-shadow:none;" onclick="setTerrainPalettePreset('#d4eaf5', 'Мелководье')">Мелководье</button>
             </div>
             <div class="field-row" style="margin-top:4px;">
               <span class="field-label">Цвет заливки:</span>
@@ -1200,7 +1273,7 @@
               <button class="btn" id="btn-add-terrain-layer" style="margin-top:6px; font-size:10.5px;">+ Создать слой</button>
             </div>
             <div style="border-top:1px solid #282d38; padding-top:6px;">
-              <button class="btn btn-primary" id="btn-add-terrain-label" style="font-size:11px; width:100%; justify-content:center;">+ Название моря/парка (0–360°)</button>
+              <button class="btn btn-primary" id="btn-add-terrain-label" style="font-size:11px; width:100%; justify-content:center;">+ Надпись местности</button>
             </div>
           </div>
         </div>
@@ -1260,6 +1333,10 @@
               <input type="text" id="leg-subtitle" value="Scheme Muromorsk tram" style="width: 175px;">
             </div>
             <div class="field-row">
+              <span class="field-label">Цвет подзаголовка:</span>
+              <input type="color" id="leg-subtitle-color" value="#94a3b8">
+            </div>
+            <div class="field-row">
               <span class="field-label">Поворот (0–360°): <b id="leg-angle-val">0°</b></span>
               <input type="range" id="leg-angle-input" min="0" max="360" value="0" style="width: 110px;">
             </div>
@@ -1304,11 +1381,13 @@
             <div class="field-row">
               <span class="field-label">Шрифт всей схемы:</span>
               <select id="global-font-select">
-                <option value="Nunito, sans-serif">Nunito Bold (MURS)</option>
+                <option value="Nunito, sans-serif">Nunito Bold</option>
                 <option value="Montserrat, sans-serif">Montserrat</option>
                 <option value="Fira Sans, sans-serif">Fira Sans</option>
                 <option value="Inter, sans-serif">Inter</option>
                 <option value="Roboto, sans-serif">Roboto</option>
+                <option value="'Manrope', sans-serif">Manrope</option>
+                <option value="'Arial', sans-serif">Arial</option>
               </select>
             </div>
             <div class="field-row">
@@ -1324,6 +1403,21 @@
               <span class="field-label">Базовая толщина путей:</span>
               <input type="number" id="global-line-width" value="6.5" min="2" max="20" step="0.5" style="width:65px;">
             </div>
+            <div class="field-row">
+              <span class="field-label">Синхр. размер шрифта с линией:</span>
+              <input type="checkbox" id="global-sync-font-size" checked>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Скругление углов:</span>
+              <button class="btn" id="btn-toggle-smooth">
+                <span id="smooth-icon">〰️</span> <span id="smooth-text">Скругление: Вкл</span>
+              </button>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Радиус поворотов: <b id="global-curve-radius-val">18px</b></span>
+              <input type="range" id="global-curve-radius-input" min="2" max="80" step="1" value="18" style="width:110px;">
+            </div>
+
             <div class="field-row">
               <span class="field-label">Глобальный угол подписей: <b id="global-label-angle-val">315°</b></span>
               <input type="range" id="global-label-angle-input" min="0" max="360" step="15" value="315" style="width:110px;">
@@ -1350,8 +1444,33 @@
               <button class="btn btn-primary" id="btn-toggle-exclude-manual" style="padding:3px 8px; font-size:10.5px;">🔒 Защищены (Вкл)</button>
             </div>
             <div class="field-row">
+              <span class="field-label">Цвет вторичных подписей:</span>
+              <input type="color" id="global-sublabel-color" value="#94a3b8">
+            </div>
+            <div style="border-top:1px solid #282d38; padding-top:6px;">
+              <button class="btn btn-primary" id="btn-global-auto-translate" style="width:100%; justify-content:center; background:#0284c7; border-color:#0284c7;">
+                🌐 Авто-перевод всех названий
+              </button>
+            </div>
+            <div style="border-top:1px solid #282d38; padding-top:6px; display:flex; flex-direction:column; gap:6px;">
+              <span style="font-size:11px; font-weight:800; color:var(--text);">Подложка холста:</span>
+              <div class="field-row">
+                <span class="field-label">Файл картинки:</span>
+                <input type="file" id="canvas-image-file" accept="image/*" style="font-size:10px; width:160px;">
+              </div>
+              <div class="field-row">
+                <span class="field-label">Прозрачность картинки: <b id="canvas-img-opacity-val">85%</b></span>
+                <input type="range" id="canvas-image-opacity" min="0" max="100" value="85" style="width:110px;">
+              </div>
+              <button class="btn btn-danger" id="btn-remove-substrate-image" style="justify-content:center; padding:3px 6px; font-size:10.5px;">Удалить подложку</button>
+            </div>
+            <div class="field-row">
               <span class="field-label">Цвет холста:</span>
               <input type="color" id="canvas-bg-color" value="#ffffff">
+            </div>
+            <div class="field-row">
+              <span class="field-label">Прозрачность холста: <b id="canvas-opacity-val">100%</b></span>
+              <input type="range" id="canvas-bg-opacity" min="0" max="100" step="1" value="100" style="width:110px;">
             </div>
             <div style="border-top:1px solid #282d38; padding-top:6px; display:flex; flex-direction:column; gap:5px;">
               <button class="btn" id="btn-apply-globals-selected" style="justify-content:center; border-color:var(--accent); color:#38bdf8;">
@@ -1509,22 +1628,24 @@
       gridStep: 24,
       angleSnap: 45,
       smoothCurve: true,
+      syncFontSize: true,
       currentTool: 'select',
-      zoom: 0.7973436829561599,
-      panX: 985.5521695328393,
-      panY: 525.8163210219811,
+      zoom: 1,
+      panX: 400,
+      panY: 250,
 
       activeLineId: null,
       activeDecorId: null,
-      selectedStationId: 'st-1791738222874',
+      selectedStationId: null,
       selectedTransferId: null,
       selectedTerrainLabelId: null,
       selectedTerminalId: null,
 
       globalStyles: {
-        fontFamily: 'Nunito, sans-serif',
+        fontFamily: 'Manrope, sans-serif',
         labelAngle: 315,
         labelColor: '#0f172a',
+        sublabelColor: '#94a3b8',
         fontSize: 12,
         lineWidth: 6.5,
         shadowMode: 'none',
@@ -1532,12 +1653,17 @@
         substrateImageUrl: '',
         substrateOpacity: 0.85,
         labelPos: 'top-right',
-        excludeManualStations: true
+        excludeManualStations: true,
+        curveRadius: 18,
+        canvasOpacity: 100,
+        syncFontSize: true
       },
 
       terminalsSettings: {
         autoGenerate: true,
         titleText: '',
+        subtitleText: '',
+        subtitleColor: '#94a3b8',
         attach: 'track-exact',
         offsetDist: 0,
         offsetSide: 'auto',
@@ -1555,10 +1681,11 @@
 
       legend: {
         show: true,
-        x: 899,
-        y: -314,
-        title: 'Трамвайные маршруты',
+        x: 100,
+        y: 100,
+        title: 'Список маршрутов',
         subtitle: '',
+        subtitleColor: '#94a3b8',
         template: 'table',
         columns: 1,
         logoType: 'none',
@@ -1574,245 +1701,26 @@
         borderWidth: 1.5,
         borderColor: '#cbd5e1',
         radius: 8,
-        notes: [
-          { id: 'not-1', icon: '', text: 'Интервал движения маршрутов: 5–15 мин.' },
-          { id: 'not-2', icon: '', text: 'Пересадка на станции метро Муроморска' }
-        ]
+        notes: []
       },
 
-      lines: [
-        {
-          id: 'line-1791737855264',
-          name: 'Т1',
-          subname: '',
-          color: '#ED1B24',
-          width: 6.5,
-          opacity: 1,
-          shadow: false,
-          offset: 0,
-          dashStyle: 'solid',
-          badgeText: '1',
-          points: [
-            { x: 288, y: 744 },
-            { x: 288, y: 240 },
-            { x: 288, y: 144 },
-            { x: 672, y: -240 },
-            { x: 672, y: -288 }
-          ]
-        },
-        {
-          id: 'line-1791737874304',
-          name: 'Т2',
-          subname: '',
-          color: '#0078BF',
-          width: 6.5,
-          opacity: 1,
-          shadow: false,
-          offset: 0,
-          dashStyle: 'solid',
-          badgeText: '2',
-          points: [
-            { x: -696, y: -144 },
-            { x: -581, y: -29 },
-            { x: -221, y: -29 },
-            { x: 51, y: 243 },
-            { x: 1152, y: 240 }
-          ]
-        },
-        {
-          id: 'line-1791737881316',
-          name: 'Т3',
-          subname: '',
-          color: '#009A49',
-          width: 6.5,
-          opacity: 1,
-          shadow: false,
-          offset: 0,
-          dashStyle: 'solid',
-          badgeText: '3',
-          points: [
-            { x: -72, y: -192 },
-            { x: 144, y: 24 },
-            { x: 144, y: 192 },
-            { x: 432, y: 480 },
-            { x: 648, y: 480 },
-            { x: 720, y: 552 }
-          ]
-        },
-        {
-          id: 'line-1791737894205',
-          name: 'Т4',
-          subname: '',
-          color: '#F58220',
-          width: 6.5,
-          opacity: 1,
-          shadow: false,
-          offset: 0.5,
-          dashStyle: 'rail-ties',
-          badgeText: '4',
-          points: [
-            { x: 1152, y: 240 },
-            { x: 48, y: 240 },
-            { x: -264, y: 552 },
-            { x: -336, y: 552 }
-          ]
-        },
-        {
-          id: 'line-1791925108817',
-          name: 'Т5',
-          subname: '',
-          color: '#7B2C8C',
-          width: 6.5,
-          opacity: 1,
-          shadow: false,
-          offset: 1,
-          dashStyle: 'solid',
-          badgeText: '5',
-          points: [
-            { x: 1152, y: 240 },
-            { x: 672, y: 240 },
-            { x: 604, y: 308 },
-            { x: 604, y: 356 },
-            { x: 628, y: 356 },
-            { x: 844, y: 356 }
-          ]
-        }
-      ],
-
-      stations: [
-        { id: 'st-1791737936946', name: 'Кишбург', x: 288, y: 240, style: 'interchange-borderless', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737855264', 'line-1791737894205', 'line-1791737874304'] },
-        { id: 'st-1791737937960', name: 'Савватеево', x: 288, y: 336, style: 'interchange-borderless', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'bottom-left', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737855264', 'line-1791737881316'] },
-        { id: 'st-1791737939070', name: 'Окская', x: 192, y: 240, style: 'interchange-borderless', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'bottom-left', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737881316', 'line-1791737894205', 'line-1791737874304'] },
-        { id: 'st-1791738142708', name: 'Остановка 4', x: 144, y: 120, style: 'interchange-borderless', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737881316'] },
-        { id: 'st-1791738144145', name: 'Остановка 5', x: 120, y: 0, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737881316'] },
-        { id: 'st-1791738145915', name: 'Остановка 6', x: 0, y: -120, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737881316'] },
-        { id: 'st-1791738147214', name: 'Остановка 7', x: -96, y: -192, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737881316'] },
-        { id: 'st-1791738149485', name: 'Остановка 8', x: 312, y: 120, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-left', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737855264'] },
-        { id: 'st-1791738150432', name: 'Остановка 9', x: 408, y: 48, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-left', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737855264'] },
-        { id: 'st-1791738151338', name: 'Остановка 10', x: 504, y: -72, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-left', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737855264'] },
-        { id: 'st-1791738152142', name: 'Остановка 11', x: 624, y: -168, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-left', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737855264'] },
-        { id: 'st-1791738154404', name: 'Остановка 12', x: 672, y: -288, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737855264'] },
-        { id: 'st-1791738156700', name: 'Остановка 13', x: -24, y: 168, style: 'interchange-borderless', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737874304'] },
-        { id: 'st-1791738157314', name: 'Остановка 14', x: -120, y: 96, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737874304'] },
-        { id: 'st-1791738158542', name: 'Остановка 15', x: -192, y: -24, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737874304'] },
-        { id: 'st-1791738159092', name: 'Остановка 16', x: -312, y: -24, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737874304'] },
-        { id: 'st-1791738159706', name: 'Остановка 17', x: -456, y: -24, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737874304'] },
-        { id: 'st-1791738160589', name: 'Остановка 18', x: -624, y: -48, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737874304'] },
-        { id: 'st-1791738161638', name: 'Остановка 19', x: -696, y: -144, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737874304'] },
-        { id: 'st-1791738164185', name: 'Остановка 20', x: -336, y: 528, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737894205'] },
-        { id: 'st-1791738165559', name: 'Остановка 22', x: -192, y: 480, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-left', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737894205'] },
-        { id: 'st-1791738167099', name: 'Остановка 24', x: -96, y: 408, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-left', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737894205'] },
-        { id: 'st-1791738168133', name: 'Остановка 25', x: -24, y: 312, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737894205'] },
-        { id: 'st-1791738222268', name: 'Остановка 26', x: 456, y: 240, style: 'metro-tick', colorMode: 'stripes', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737894205', 'line-1791737874304'] },
-        { id: 'st-1791738222874', name: 'Остановка 27', x: 720, y: 240, style: 'metro-tick', colorMode: 'stripes', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737894205', 'line-1791925108817', 'line-1791737874304'] },
-        { id: 'st-1791738224755', name: 'Остановка 28', x: 912, y: 240, style: 'metro-tick', colorMode: 'stripes', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737894205', 'line-1791925108817', 'line-1791737874304'] },
-        { id: 'st-1791738225772', name: 'Гоголевская', x: 1176, y: 240, style: 'metro-tick', colorMode: 'stripes', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737874304', 'line-1791737894205', 'line-1791925108817'] },
-        { id: 'st-1791738228058', name: 'Остановка 30', x: 720, y: 552, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737881316'] },
-        { id: 'st-1791738229258', name: 'Остановка 31', x: 600, y: 456, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737881316'] },
-        { id: 'st-1791738230212', name: 'Остановка 32', x: 480, y: 480, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737881316'] },
-        { id: 'st-1791738236750', name: 'Остановка 33', x: 384, y: 432, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737881316'] },
-        { id: 'st-1791738238219', name: 'Остановка 34', x: 288, y: 432, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'bottom-left', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737855264'] },
-        { id: 'st-1791738239086', name: 'Остановка 35', x: 288, y: 528, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737855264'] },
-        { id: 'st-1791738239871', name: 'Остановка 36', x: 288, y: 624, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737855264'] },
-        { id: 'st-1791738240536', name: 'Остановка 37', x: 288, y: 744, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791737855264'] },
-        { id: 'st-1791925209483', name: 'Остановка 36', x: 744, y: 360, style: 'metro-tick', colorMode: 'line', tickShift: 'auto', customColor: '#ffffff', labelPos: 'top-right', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791925108817'] },
-        { id: 'st-1791925210671', name: 'Остановка 37', x: 624, y: 288, style: 'metro-tick', colorMode: 'line', tickShift: 'opposite', customColor: '#ffffff', labelPos: 'bottom-left', labelAngle: 315, tickLen: 9, isTerminal: false, termPrefix: 'ДС «', termAlign: 'beside', lineIds: ['line-1791925108817'] }
-      ],
-
+      lines: [],
+      stations: [],
       terminals: [],
-
-      transfers: [
-        {
-          id: 'tr-1791737996266',
-          stationIds: [
-            'st-1791737939070',
-            'st-1791737937960',
-            'st-1791737936946'
-          ],
-          style: 'circle-gradient-borderless',
-          curvature: 25,
-          dashLength: 5,
-          dashGap: 4,
-          dashWidth: 3.5,
-          dashColor: '#0f172a'
-        },
-        {
-          id: 'tr-1791925184826',
-          stationIds: [
-            'st-1791738156700',
-            'st-1791738142708'
-          ],
-          style: 'radial-arc-borderless',
-          curvature: 1,
-          dashLength: 5,
-          dashGap: 4,
-          dashWidth: 3.5,
-          dashColor: '#0f172a'
-        }
-      ],
-
-      decorations: [
-        {
-          id: 'dec-1791787977797',
-          name: 'Ул. Коммунарская',
-          type: 'highway',
-          color: '#f8fafc',
-          width: 8,
-          opacity: 0.95,
-          shadow: false,
-          showLabel: true,
-          labelText: 'Ул. Коммунарская',
-          labelColor: '#64748b',
-          labelSize: 10,
-          repeatLabel: true,
-          labelInterval: 500,
-          crossingMode: 'bridge',
-          points: [
-            { x: -918, y: 486 },
-            { x: -894, y: 486 },
-            { x: -966, y: 486 },
-            { x: -966, y: 174 },
-            { x: -864, y: 72 },
-            { x: -768, y: 72 },
-            { x: -576, y: 72 },
-            { x: 816, y: 72 }
-          ]
-        },
-        {
-          id: 'dec-1791788269516',
-          name: 'Захарово шоссе',
-          type: 'highway',
-          color: '#f8fafc',
-          width: 8,
-          opacity: 0.95,
-          shadow: false,
-          showLabel: true,
-          labelText: 'Захарово шоссе',
-          labelColor: '#64748b',
-          labelSize: 10,
-          repeatLabel: false,
-          labelInterval: 260,
-          crossingMode: 'bridge',
-          points: [
-            { x: -936, y: -72 },
-            { x: -744, y: -72 },
-            { x: -422, y: 250 },
-            { x: -422, y: 778 },
-            { x: -422, y: 802 }
-          ]
-        }
-      ],
+      transfers: [],
+      decorations: [],
 
       terrainLayers: [
-        { id: 'tlayer-water', name: 'Вода (Акватории)', color: '#2a557a', visible: true, cells: {} },
-        { id: 'tlayer-green', name: 'Растительность (Парки)', color: '#2d5538', visible: true, cells: {} },
-        { id: 'tlayer-ground', name: 'Земля (Острова)', color: '#ede8d8', visible: true, cells: {} }
+        { id: 'tlayer-water', name: 'Вода (Акватории)', color: '#a3c9e2', visible: true, cells: {} },
+        { id: 'tlayer-green', name: 'Растительность (Парки)', color: '#c2e2c0', visible: true, cells: {} },
+        { id: 'tlayer-ground', name: 'Земля (Острова)', color: '#f3ede2', visible: true, cells: {} }
       ],
       activeLayerId: 'tlayer-water',
-      paintMode: 'bucket',
+      paintMode: 'brush',
       brushRadius: 2,
       terrainStyle: 'smooth',
       terrainLabels: [],
+      usedPalette: [],
 
       isPanning: false,
       startPanX: 0,
@@ -1841,8 +1749,24 @@
         terrainLayers: STATE.terrainLayers,
         terrainLabels: STATE.terrainLabels,
         legend: STATE.legend,
-        globalStyles: STATE.globalStyles
+        globalStyles: STATE.globalStyles,
+        palette: getUsedPalette()
       });
+    }
+
+    function getUsedPalette() {
+      const colors = new Set();
+      (STATE.lines || []).forEach(l => { if (l.color) colors.add(l.color.toUpperCase()); });
+      (STATE.decorations || []).forEach(d => { if (d.color) colors.add(d.color.toUpperCase()); });
+      (STATE.terrainLayers || []).forEach(tl => {
+        if (tl.color) colors.add(tl.color.toUpperCase());
+        Object.values(tl.cells || {}).forEach(c => { if (c) colors.add(c.toUpperCase()); });
+      });
+      (STATE.stations || []).forEach(s => {
+        if (s.colorMode === 'custom' && s.customColor) colors.add(s.customColor.toUpperCase());
+      });
+      if (STATE.globalStyles?.canvasBg) colors.add(STATE.globalStyles.canvasBg.toUpperCase());
+      return Array.from(colors);
     }
 
     function pushHistory() {
@@ -1991,7 +1915,8 @@
       return offsetPts;
     }
 
-    function buildSmoothPath(points, radius = 18) {
+    function buildSmoothPath(points, radius = (STATE.globalStyles?.curveRadius ?? 18))
+    {
       if (!points || points.length < 2) return '';
       const pts = [];
       for (let i = 0; i < points.length; i++) {
@@ -2066,16 +1991,24 @@
 
 
     function getLinesAtStation(st) {
+      const allTracks = [
+        ...STATE.lines,
+        ...STATE.decorations.map(d => ({
+          id: d.id, name: d.name, color: d.color || '#64748b',
+          width: d.width || 6.5, offset: 0, points: d.points || [], isDecor: true
+        }))
+      ];
+
       if (!STATE.draggingStation && Array.isArray(st.lineIds) && st.lineIds.length > 0) {
-        const manualLines = st.lineIds.map(id => STATE.lines.find(l => l.id === id)).filter(Boolean);
+        const manualLines = st.lineIds.map(id => allTracks.find(l => l.id === id)).filter(Boolean);
         if (manualLines.length > 0) return manualLines;
       }
 
       const threshold = STATE.gridStep * 1.5;
       const detected = [];
 
-      STATE.lines.forEach(line => {
-        const paths = getLineAllPaths(line);
+      allTracks.forEach(track => {
+        const paths = getLineAllPaths(track);
         if (paths.length === 0) return;
         let minDist2 = Infinity;
         paths.forEach(pts => {
@@ -2085,14 +2018,14 @@
           }
         });
         if (minDist2 <= threshold * threshold) {
-          detected.push({ line, dist: minDist2 });
+          detected.push({ line: track, dist: minDist2 });
         }
       });
 
       detected.sort((a, b) => a.dist - b.dist);
       const res = detected.map(d => d.line);
       st.lineIds = res.map(l => l.id);
-      return res.length > 0 ? res : (STATE.lines.length > 0 ? [STATE.lines[0]] : []);
+      return res.length > 0 ? res : (allTracks.length > 0 ? [allTracks[0]] : []);
     }
 
     function getStationVisualGeometry(st) {
@@ -2360,6 +2293,10 @@
       } else if (substrateImage) {
         substrateImage.style.display = 'none';
       }
+
+      const op = (STATE.globalStyles.canvasOpacity !== undefined ? STATE.globalStyles.canvasOpacity : 100) / 100;
+      substrateRect.setAttribute('fill-opacity', String(op));
+
     }
 
     function renderGrid() {
@@ -2441,6 +2378,17 @@
         const rot = tlab.angle !== undefined ? tlab.angle : 0;
         g.setAttribute('transform', `translate(${tlab.x}, ${tlab.y}) rotate(${rot})`);
 
+        if (tlab.subtext && tlab.subtext.trim()) {
+          const sub = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          sub.setAttribute('fill', tlab.subcolor || STATE.globalStyles.sublabelColor || '#94a3b8');
+          sub.setAttribute('font-size', String(Math.max(8, Math.round((tlab.size || 13) * 0.72))));
+          sub.setAttribute('letter-spacing', `${Math.max(1, Math.round((tlab.spacing || 6) * 0.7))}px`);
+          sub.setAttribute('text-anchor', 'middle');
+          sub.setAttribute('y', String(Math.round((tlab.size || 13) * 1.15)));
+          sub.textContent = tlab.subtext.trim();
+          g.appendChild(sub);
+        }
+
         const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         txt.setAttribute('fill', tlab.color || '#7bb2c9');
         txt.setAttribute('font-size', String(tlab.size || 13));
@@ -2457,6 +2405,7 @@
             selectTerrainLabel(tlab.id);
           }
         };
+        if (STATE.selectedTerrainLabelId === tlab.id) g.classList.add('selected-halo');
         terrainLabelsLayer.appendChild(g);
       });
     }
@@ -2583,7 +2532,7 @@
         g.onmousedown = handleDecorClick;
         g.onclick = handleDecorClick;
 
-        const hasShadow = (STATE.globalStyles.shadowMode === 'all' || STATE.globalStyles.shadowMode === 'decor') && dec.shadow;
+        const hasShadow = (STATE.globalStyles.shadowMode === 'all' || STATE.globalStyles.shadowMode === 'decor');
 
         if (STATE.activeDecorId === dec.id) {
           const halo = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -2765,7 +2714,8 @@
 
         const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         g.setAttribute('opacity', String(line.opacity !== undefined ? line.opacity : 1.0));
-        const hasShadow = (STATE.globalStyles.shadowMode === 'all' || STATE.globalStyles.shadowMode === 'lines') && line.shadow;
+
+        const hasShadow = (STATE.globalStyles.shadowMode === 'all' || STATE.globalStyles.shadowMode === 'lines');
         if (hasShadow) g.setAttribute('filter', 'url(#line-dropshadow)');
 
         allPaths.forEach(pts => {
@@ -2792,9 +2742,16 @@
             p.setAttribute('class', 'map-line-path');
             p.setAttribute('stroke-linecap', cap);
             p.setAttribute('stroke-linejoin', 'round');
+            p.setAttribute('fill', 'none');
             if (dash) p.setAttribute('stroke-dasharray', dash);
             return p;
           };
+
+          if (STATE.activeLineId === line.id) {
+            const halo = makePath(strokeW + 6, '#0088ff');
+            halo.setAttribute('stroke-opacity', '0.4');
+            g.appendChild(halo);
+          }
 
           if (style === 'hollow') {
             g.appendChild(makePath(strokeW, col));
@@ -2848,6 +2805,20 @@
               STATE.draggingVertex = { lineId: activeLine.id, branchIndex: branchIdx, pointIndex: pIdx };
             };
             lineHandlesLayer.appendChild(handle);
+
+            const removeLineVertex = (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (pts.length <= 2) {
+                alert('У линии должно оставаться минимум 2 узла!');
+                return;
+              }
+              pushHistory();
+              pts.splice(pIdx, 1);
+              refreshCanvas();
+            };
+            handle.oncontextmenu = removeLineVertex;
+            handle.ondblclick = removeLineVertex;
 
             if (pIdx < pts.length - 1) {
               const pNext = pts[pIdx + 1];
@@ -2909,6 +2880,21 @@
               renderHandles();
             };
             lineHandlesLayer.appendChild(insBtn);
+            const removeDecorVertex = (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (activeDecor.points.length <= 2) {
+                alert('У декоративного пути должно оставаться минимум 2 узла!');
+                return;
+              }
+              pushHistory();
+              activeDecor.points.splice(pIdx, 1);
+              renderDecorations();
+              renderStations();
+              renderHandles();
+            };
+            handle.oncontextmenu = removeDecorVertex;
+            handle.ondblclick = removeDecorVertex;
           }
         });
       }
@@ -2962,6 +2948,8 @@
             }
           };
         }
+
+        if (isManual && STATE.selectedTerminalId === termId) termGroup.classList.add('selected-halo');
 
         let strokeCol = 'none', strokeWidth = 0;
         const bMode = conf.borderMode || 'none';
@@ -3232,19 +3220,34 @@
             ty = minBy - labelGap;
           }
 
+          const termLabelGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+          termLabelGroup.setAttribute('transform', `translate(${tx}, ${ty}) rotate(${angle})`);
+
           const titleEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
           titleEl.setAttribute('class', 'map-station-text');
           titleEl.setAttribute('fill', labelColor);
           titleEl.setAttribute('font-size', String(fontSize));
           titleEl.setAttribute('font-weight', '800');
           titleEl.setAttribute('text-anchor', anchor);
-          titleEl.setAttribute('transform', `translate(${tx}, ${ty}) rotate(${angle})`);
           titleEl.textContent = displayTitle;
+          termLabelGroup.appendChild(titleEl);
 
-          // Клик по подписи или терминалу выбирает заменяемую остановку для быстрой настройки её положения в панели
+          // Вторичная подпись терминала
+          const displaySubTitle = isManual ? (termData.subname || '') : (conf.subtitleText || '');
+          if (displaySubTitle && displaySubTitle.trim()) {
+            const subTitleEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            subTitleEl.setAttribute('class', 'map-station-text');
+            subTitleEl.setAttribute('fill', isManual ? (termData.subcolor || '#94a3b8') : (conf.subtitleColor || STATE.globalStyles.sublabelColor || '#94a3b8'));
+            subTitleEl.setAttribute('font-size', String(Math.max(7, Math.round(fontSize * 0.72))));
+            subTitleEl.setAttribute('text-anchor', anchor);
+            subTitleEl.setAttribute('y', String(Math.round(fontSize * 0.95)));
+            subTitleEl.textContent = displaySubTitle.trim();
+            termLabelGroup.appendChild(subTitleEl);
+          }
+
           if (matchingStation && !isManual) {
-            titleEl.style.cursor = 'pointer';
-            titleEl.onmousedown = (e) => {
+            termLabelGroup.style.cursor = 'pointer';
+            termLabelGroup.onmousedown = (e) => {
               if (STATE.currentTool === 'select') {
                 e.stopPropagation();
                 pushHistory();
@@ -3254,7 +3257,7 @@
             };
           }
 
-          termGroup.appendChild(titleEl);
+          termGroup.appendChild(termLabelGroup);
         }
 
         // Позволяет кликнуть по самому блоку бейджей конечной, чтобы открыть настройки этой остановки
@@ -3662,6 +3665,7 @@
         hitbox.style.cursor = (STATE.currentTool === 'transfer') ? 'crosshair' : 'pointer';
         hitGroupListeners(stGroup, st);
         stGroup.appendChild(hitbox);
+        if (STATE.selectedStationId === st.id) stGroup.classList.add('selected-halo');
         stationsLayer.appendChild(stGroup);
 
         renderStationLabel(st, geo, 0, visualOuterRadius);
@@ -3703,7 +3707,10 @@
         }
       }
 
-      const fontSize = Number(STATE.globalStyles.fontSize) || 12;
+      const baseFontSize = Number(STATE.globalStyles.fontSize) || 12;
+      const fontSize = STATE.globalStyles.syncFontSize
+        ? Math.max(8, Math.round(baseFontSize * (baseW / 6.5)))
+        : baseFontSize;
       const angle = (st.labelAngle !== undefined) ? st.labelAngle : (STATE.globalStyles.labelAngle || 0);
       const rad = angle * (Math.PI / 180);
       const sinRad = Math.sin(rad);
@@ -3795,23 +3802,37 @@
         }
       }
 
+      const labelGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      labelGroup.setAttribute('transform', `translate(${tx}, ${ty}) rotate(${angle})`);
+      labelGroup.style.cursor = 'pointer';
+
       const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
       text.setAttribute('class', 'map-station-text');
       text.setAttribute('fill', STATE.globalStyles.labelColor);
       text.setAttribute('font-size', String(fontSize));
-      text.textContent = st.name;
-
-      text.setAttribute('transform', `translate(${tx}, ${ty}) rotate(${angle})`);
       text.setAttribute('text-anchor', anchor);
+      text.textContent = st.name;
+      labelGroup.appendChild(text);
 
-      text.onclick = (e) => {
+      if (st.subname && st.subname.trim()) {
+        const sub = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        sub.setAttribute('class', 'map-station-text');
+        sub.setAttribute('fill', st.subcolor || STATE.globalStyles.sublabelColor || '#94a3b8');
+        sub.setAttribute('font-size', String(Math.max(7, Math.round(fontSize * 0.72))));
+        sub.setAttribute('text-anchor', anchor);
+        sub.setAttribute('y', String(Math.round(fontSize * 0.95)));
+        sub.textContent = st.subname.trim();
+        labelGroup.appendChild(sub);
+      }
+
+      labelGroup.onclick = (e) => {
         e.stopPropagation();
         if (STATE.currentTool === 'transfer') handleTransferStationClick(st.id);
         else if (STATE.currentTool === 'line') handleLineStartFromStation(st);
         else selectStation(st.id);
       };
 
-      labelsLayer.appendChild(text);
+      labelsLayer.appendChild(labelGroup);
     }
 
     function hitGroupListeners(stGroup, st) {
@@ -3879,7 +3900,10 @@
         }
       }
 
-      const fontSize = Number(STATE.globalStyles.fontSize) || 12;
+      const baseFontSize = Number(STATE.globalStyles.fontSize) || 12;
+      const fontSize = STATE.globalStyles.syncFontSize
+        ? Math.max(8, Math.round(baseFontSize * (baseW / 6.5)))
+        : baseFontSize;
       const angle = (st.labelAngle !== undefined) ? st.labelAngle : (STATE.globalStyles.labelAngle || 0);
       const rad = angle * (Math.PI / 180);
       const cosA = Math.cos(rad);
@@ -3956,23 +3980,37 @@
         }
       }
 
+      const labelGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      labelGroup.setAttribute('transform', `translate(${tx}, ${ty}) rotate(${angle})`);
+      labelGroup.style.cursor = 'pointer';
+
       const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
       text.setAttribute('class', 'map-station-text');
       text.setAttribute('fill', STATE.globalStyles.labelColor);
       text.setAttribute('font-size', String(fontSize));
-      text.textContent = st.name;
-
-      text.setAttribute('transform', `translate(${tx}, ${ty}) rotate(${angle})`);
       text.setAttribute('text-anchor', anchor);
+      text.textContent = st.name;
+      labelGroup.appendChild(text);
 
-      text.onclick = (e) => {
+      if (st.subname && st.subname.trim()) {
+        const sub = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        sub.setAttribute('class', 'map-station-text');
+        sub.setAttribute('fill', st.subcolor || STATE.globalStyles.sublabelColor || '#94a3b8');
+        sub.setAttribute('font-size', String(Math.max(7, Math.round(fontSize * 0.72))));
+        sub.setAttribute('text-anchor', anchor);
+        sub.setAttribute('y', String(Math.round(fontSize * 0.95)));
+        sub.textContent = st.subname.trim();
+        labelGroup.appendChild(sub);
+      }
+
+      labelGroup.onclick = (e) => {
         e.stopPropagation();
         if (STATE.currentTool === 'transfer') handleTransferStationClick(st.id);
         else if (STATE.currentTool === 'line') handleLineStartFromStation(st);
         else selectStation(st.id);
       };
 
-      labelsLayer.appendChild(text);
+      labelsLayer.appendChild(labelGroup);
     }
 
     /* ---------------- ОТРИСОВКА ПЕРЕСАДОК ---------------- */
@@ -4292,6 +4330,7 @@
           g.appendChild(pathInner);
         }
 
+        if (STATE.selectedTransferId === tr.id) g.classList.add('selected-halo');
         transfersLayer.appendChild(g);
       });
     }
@@ -4342,7 +4381,7 @@
       if (leg.subtitle) {
         const t2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         t2.setAttribute('x', '20'); t2.setAttribute('y', String(curY));
-        t2.setAttribute('font-size', String(fs - 1.5)); t2.setAttribute('fill', '#94a3b8');
+        t2.setAttribute('fill', leg.subtitleColor || '#94a3b8');
         t2.textContent = leg.subtitle;
         g.appendChild(t2);
         curY += 18;
@@ -4481,6 +4520,33 @@
       if (sec) sec.classList.toggle('collapsed');
     };
 
+    function clearAllSelections() {
+      STATE.activeLineId = null;
+      STATE.activeDecorId = null;
+      STATE.selectedStationId = null;
+      STATE.selectedTransferId = null;
+      STATE.selectedTerrainLabelId = null;
+      STATE.selectedTerminalId = null;
+
+      hideAllPropsPanels();
+      const emptyMsg = document.getElementById('props-empty-msg');
+      if (emptyMsg) emptyMsg.style.display = 'block';
+      const title = document.getElementById('acc-selected-title');
+      if (title) title.textContent = '✏️ Свойства выбранного';
+
+      renderLines();
+      renderDecorations();
+      renderStations();
+      renderTransfers();
+      renderTerminals();
+      renderTerrainLabels();
+      renderHandles();
+      renderSidebarLines();
+      renderStationsList();
+      renderTransfersList();
+      renderDecorList();
+    }
+
     function openAccordionSection(secId) {
       const sec = document.getElementById(secId);
       if (sec) {
@@ -4582,6 +4648,7 @@
       STATE.selectedTransferId = null;
       STATE.selectedTerrainLabelId = null;
       STATE.selectedTerminalId = null;
+      STATE.activeLineId = null;
 
       openAccordionSection('acc-sec-selected');
       hideAllPropsPanels();
@@ -4591,9 +4658,16 @@
       if (title) title.textContent = '✏️ Свойства остановки';
 
       const st = STATE.stations.find(s => s.id === stId);
+
       if (st) {
         const nameEl = document.getElementById('prop-station-name');
         if (nameEl) nameEl.value = st.name || '';
+
+        const subEl = document.getElementById('prop-station-subname');
+        if (subEl) subEl.value = st.subname || '';
+        const subColEl = document.getElementById('prop-station-subcolor');
+        if (subColEl) subColEl.value = st.subcolor || STATE.globalStyles.sublabelColor || '#94a3b8';
+
         const styleEl = document.getElementById('prop-station-style');
         if (styleEl) styleEl.value = st.style || 'metro-tick';
         const cmEl = document.getElementById('prop-station-colormode');
@@ -4613,9 +4687,9 @@
         if (container) {
           container.innerHTML = '';
           getLinesAtStation(st);
-          STATE.lines.forEach(l => {
+          [...STATE.lines, ...STATE.decorations].forEach(l => {
             const row = document.createElement('label');
-            row.style.cssText = 'display:flex; align-items:center; gap:6px; font-size:11px; cursor:pointer;';
+            row.style.cssText = 'display:flex; align-items:center; gap:6px; font-size:11.5px; cursor:pointer;';
             const chk = document.createElement('input');
             chk.type = 'checkbox';
             chk.checked = (st.lineIds || []).includes(l.id);
@@ -4663,10 +4737,17 @@
       const title = document.getElementById('acc-selected-title');
       if (title) title.textContent = '✏️ Свойства конечного терминала';
 
-      const term = (STATE.terminals || []).find(t => t.id === termId);
+      const term = (STATE.terminals || []).find(t => t.id === termId); // <--- Сначала ищем term!
+
       if (term) {
         const nameEl = document.getElementById('prop-term-name');
         if (nameEl) nameEl.value = term.name || '';
+
+        const termSubEl = document.getElementById('prop-term-subname');
+        if (termSubEl) termSubEl.value = term.subname || '';
+        const termSubColEl = document.getElementById('prop-term-subcolor');
+        if (termSubColEl) termSubColEl.value = term.subcolor || '#94a3b8';
+
         const alignEl = document.getElementById('prop-term-align');
         if (alignEl) alignEl.value = term.align || 'horizontal';
         const styleEl = document.getElementById('prop-term-style');
@@ -4713,6 +4794,7 @@
       STATE.activeDecorId = null;
       STATE.selectedTerrainLabelId = null;
       STATE.selectedTerminalId = null;
+      STATE.activeLineId = null;
 
       openAccordionSection('acc-sec-selected');
       hideAllPropsPanels();
@@ -4831,10 +4913,17 @@
       const title = document.getElementById('acc-selected-title');
       if (title) title.textContent = '✏️ Свойства надписи местности';
 
-      const tl = STATE.terrainLabels.find(t => t.id === labelId);
+      const tl = STATE.terrainLabels.find(t => t.id === labelId); // <--- Сначала ищем tl!
+
       if (tl) {
         const textEl = document.getElementById('prop-tlabel-text');
         if (textEl) textEl.value = tl.text || '';
+
+        const tlSub = document.getElementById('prop-tlabel-subtext');
+        if (tlSub) tlSub.value = tl.subtext || '';
+        const tlSubCol = document.getElementById('prop-tlabel-subcolor');
+        if (tlSubCol) tlSubCol.value = tl.subcolor || '#94a3b8';
+
         const angleEl = document.getElementById('prop-tlabel-angle-input');
         if (angleEl) angleEl.value = tl.angle || 0;
         const angleVal = document.getElementById('prop-tlabel-angle-val');
@@ -4872,13 +4961,16 @@
       const c = document.getElementById('stations-list-container');
       if (!c) return;
       c.innerHTML = '';
-      STATE.stations.forEach(st => {
-        const item = document.createElement('div');
-        item.style.cssText = `background:${st.id === STATE.selectedStationId ? '#252e3e' : '#1f232b'}; padding:5px 8px; border-radius:4px; font-size:11px; cursor:pointer; display:flex; justify-content:space-between;`;
-        item.innerHTML = `<span>${st.isTerminal ? '🏁 ' : ''}${st.name}</span><span style="color:var(--text-muted); font-size:10px;">${(st.lineIds || []).length} маршр.</span>`;
-        item.onclick = () => selectStation(st.id);
-        c.appendChild(item);
-      });
+      const query = (document.getElementById('station-search-input')?.value || '').trim().toLowerCase();
+      STATE.stations
+        .filter(st => !query || (st.name || '').toLowerCase().includes(query))
+        .forEach(st => {
+          const item = document.createElement('div');
+          item.style.cssText = `background:${st.id === STATE.selectedStationId ? '#252e3e' : '#1f232b'}; padding:5px 8px; border-radius:4px; font-size:11px; cursor:pointer; display:flex; justify-content:space-between;`;
+          item.innerHTML = `<span>${st.isTerminal ? '🏁 ' : ''}${st.name}</span><span style="color:var(--text-muted); font-size:10px;">${(st.lineIds || []).length} маршр.</span>`;
+          item.onclick = () => selectStation(st.id);
+          c.appendChild(item);
+        });
     }
 
     function renderTransfersList() {
@@ -4931,20 +5023,26 @@
       const list = document.getElementById('terrain-layers-list');
       if (!list) return;
       list.innerHTML = '';
-      STATE.terrainLayers.forEach(l => {
+      STATE.terrainLayers.forEach((l, idx) => {
         const row = document.createElement('div');
-        row.style.cssText = `display:flex; align-items:center; justify-content:space-between; padding:4px 6px; background:${l.id === STATE.activeLayerId ? '#252e3e' : '#1a1d24'}; border-radius:4px; font-size:11px; cursor:pointer;`;
+        row.style.cssText = `display:flex; align-items:center; justify-content:space-between; padding:4px 6px; background:${l.id === STATE.activeLayerId ? '#252e3e' : '#1a1d24'}; border-radius:4px; font-size:11px; cursor:pointer; gap:4px;`;
         row.innerHTML = `
-          <div style="display:flex; align-items:center; gap:6px;">
-            <div style="width:12px; height:12px; background:${l.color}; border-radius:2px;"></div>
-            <span>${l.name}</span>
+          <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:0;">
+            <div style="width:12px; height:12px; background:${l.color}; border-radius:2px; flex-shrink:0;"></div>
+            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${l.name}</span>
           </div>
-          <button style="background:none; border:none; color:${l.visible ? '#38bdf8' : '#64748b'}; cursor:pointer;">${l.visible ? '👁️' : '🙈'}</button>
+          <div style="display:flex; align-items:center; gap:2px; flex-shrink:0;">
+            <button class="btn" style="padding:1px 4px; font-size:9px;" onclick="moveTerrainLayer(${idx}, -1)" title="Слой ниже">▲</button>
+            <button class="btn" style="padding:1px 4px; font-size:9px;" onclick="moveTerrainLayer(${idx}, 1)" title="Слой выше">▼</button>
+            <button style="background:none; border:none; color:${l.visible ? '#38bdf8' : '#64748b'}; cursor:pointer; padding:0 3px;" class="btn-vis" title="Скрыть/показать">${l.visible ? '👁️' : '🙈'}</button>
+            <button class="btn btn-danger" style="padding:1px 5px; font-size:10px;" onclick="deleteTerrainLayer('${l.id}')" title="Удалить слой">✖</button>
+          </div>
         `;
         row.onclick = () => { STATE.activeLayerId = l.id; renderTerrainLayersUI(); };
-        const btn = row.querySelector('button');
-        if (btn) {
-          btn.onclick = (e) => {
+
+        const visBtn = row.querySelector('.btn-vis');
+        if (visBtn) {
+          visBtn.onclick = (e) => {
             e.stopPropagation();
             l.visible = !l.visible;
             renderTerrain();
@@ -4954,6 +5052,34 @@
         list.appendChild(row);
       });
     }
+
+    window.moveTerrainLayer = function(idx, dir) {
+      const targetIdx = idx + dir;
+      if (targetIdx < 0 || targetIdx >= STATE.terrainLayers.length) return;
+      pushHistory();
+      const tmp = STATE.terrainLayers[idx];
+      STATE.terrainLayers[idx] = STATE.terrainLayers[targetIdx];
+      STATE.terrainLayers[targetIdx] = tmp;
+      renderTerrain();
+      renderTerrainLayersUI();
+      DBG.log(`[TERRAIN] Слой перемещён: ${idx} -> ${targetIdx}`, 'action');
+    };
+
+    window.deleteTerrainLayer = function(layerId) {
+      if (STATE.terrainLayers.length <= 1) {
+        alert('Должен оставаться хотя бы один слой местности!');
+        return;
+      }
+      if (!confirm('Удалить этот слой местности со всеми закрашенными клетками?')) return;
+      pushHistory();
+      STATE.terrainLayers = STATE.terrainLayers.filter(l => l.id !== layerId);
+      if (STATE.activeLayerId === layerId) {
+        STATE.activeLayerId = STATE.terrainLayers[0].id;
+      }
+      renderTerrain();
+      renderTerrainLayersUI();
+      DBG.log(`[TERRAIN] Слой id=${layerId} удалён`, 'action');
+    };
 
     function renderBundleLinesUI() {
       const c = document.getElementById('bundle-lines-selector');
@@ -5076,6 +5202,8 @@
       if (document.getElementById('term-bg-mode-select')) document.getElementById('term-bg-mode-select').value = conf.bgMode || 'none';
       if (document.getElementById('term-bg-color')) document.getElementById('term-bg-color').value = conf.bgColor || '#e2e8f0';
       if (document.getElementById('term-overlap-mode')) document.getElementById('term-overlap-mode').value = conf.overlapMode || 'badges-only';
+      if (document.getElementById('term-subtitle-input')) document.getElementById('term-subtitle-input').value = conf.subtitleText || '';
+      if (document.getElementById('term-subtitle-color')) document.getElementById('term-subtitle-color').value = conf.subtitleColor || '#94a3b8';
     }
 
     function syncLegendFormUI() {
@@ -5083,6 +5211,7 @@
       if (document.getElementById('leg-show')) document.getElementById('leg-show').checked = Boolean(leg.show);
       if (document.getElementById('leg-title')) document.getElementById('leg-title').value = leg.title || '';
       if (document.getElementById('leg-subtitle')) document.getElementById('leg-subtitle').value = leg.subtitle || '';
+      if (document.getElementById('leg-subtitle-color')) document.getElementById('leg-subtitle-color').value = leg.subtitleColor || '#94a3b8';
       if (document.getElementById('leg-columns-select')) document.getElementById('leg-columns-select').value = String(leg.columns || 1);
       if (document.getElementById('leg-logo-type')) document.getElementById('leg-logo-type').value = leg.logoType || 'symbol';
       if (document.getElementById('leg-symbol-input')) document.getElementById('leg-symbol-input').value = leg.logoSymbol || '🚋';
@@ -5101,6 +5230,133 @@
     /* =========================================================================
        МОДУЛЬ 6: ИНСТРУМЕНТЫ РЕДАКТИРОВАНИЯ И ДЕЙСТВИЯ (ACTIONS)
        ========================================================================= */
+    async function translateText(text, targetLang = 'en') {
+      if (!text || !text.trim()) return '';
+      try {
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${encodeURIComponent(targetLang)}&dt=t&q=${encodeURIComponent(text.trim())}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        if (data && data[0]) {
+          return data[0].map(item => item[0]).join('');
+        }
+        return '';
+      } catch (err) {
+        DBG.log(`Ошибка авто-перевода для "${text}": ${err.message}`, 'warn');
+        return '';
+      }
+    }
+
+    // Глобальный авто-перевод всех названий схемы (RU -> EN)
+    async function autoTranslateAllMap(targetLang = 'en') {
+      DBG.log(`[TRANSLATE] Запуск авто-перевода схемы на ${targetLang}...`, 'info');
+      pushHistory();
+      let count = 0;
+
+      // 1. Остановки
+      for (const st of STATE.stations) {
+        if (st.name) {
+          const trans = await translateText(st.name, targetLang);
+          if (trans) { st.subname = trans; count++; }
+        }
+      }
+
+      // 2. Линии
+      for (const line of STATE.lines) {
+        if (line.name) {
+          const trans = await translateText(line.name, targetLang);
+          if (trans) { line.subname = trans; count++; }
+        }
+      }
+
+      // 3. Терминалы
+      if (STATE.terminalsSettings.titleText) {
+        const trans = await translateText(STATE.terminalsSettings.titleText, targetLang);
+        if (trans) { STATE.terminalsSettings.subtitleText = trans; count++; }
+      }
+      for (const term of (STATE.terminals || [])) {
+        if (term.name) {
+          const trans = await translateText(term.name, targetLang);
+          if (trans) { term.subname = trans; count++; }
+        }
+      }
+
+      // 4. Надписи местностей
+      for (const tlab of (STATE.terrainLabels || [])) {
+        if (tlab.text) {
+          const trans = await translateText(tlab.text, targetLang);
+          if (trans) { tlab.subtext = trans; count++; }
+        }
+      }
+
+      // 5. Легенда
+      if (STATE.legend?.title) {
+        const trans = await translateText(STATE.legend.title, targetLang);
+        if (trans) { STATE.legend.subtitle = trans; count++; }
+      }
+
+      syncLegendFormUI();
+      syncTerminalsFormUI();
+      refreshCanvas();
+      if (STATE.selectedStationId) selectStation(STATE.selectedStationId);
+      DBG.log(`[TRANSLATE] Успешно переведено и добавлено подписей: ${count}`, 'success');
+    }
+
+    function autoPlaceStationsOnActiveLine() {
+      const line = STATE.lines.find(l => l.id === STATE.activeLineId);
+      if (!line) return;
+      const paths = getLineAllPaths(line);
+      if (paths.length === 0) {
+        alert('У выбранной линии ещё нет нарисованной трассы!');
+        return;
+      }
+      const stepDist = Math.max(24, parseFloat(document.getElementById('auto-stations-step')?.value) || 120);
+      pushHistory();
+
+      // Удаляем предыдущие авто-остановки, созданные специально для этой линии
+      STATE.stations = STATE.stations.filter(st => !(st.autoLineId === line.id && (st.lineIds || []).length <= 1));
+
+      let count = 1;
+      paths.forEach(pts => {
+        let distAccum = 0;
+        for (let i = 0; i < pts.length - 1; i++) {
+          const p1 = pts[i], p2 = pts[i + 1];
+          const segLen = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+          if (segLen < 1) continue;
+          const ux = (p2.x - p1.x) / segLen, uy = (p2.y - p1.y) / segLen;
+
+          let pos = (i === 0) ? 0 : (stepDist - distAccum);
+          while (pos <= segLen) {
+            const sx = Math.round(p1.x + ux * pos);
+            const sy = Math.round(p1.y + uy * pos);
+
+            const existing = STATE.stations.find(s => Math.hypot(s.x - sx, s.y - sy) <= STATE.gridStep * 0.8);
+            if (existing) {
+              if (!existing.lineIds) existing.lineIds = [];
+              if (!existing.lineIds.includes(line.id)) existing.lineIds.push(line.id);
+            } else {
+              STATE.stations.push({
+                id: 'st-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+                name: `${line.badgeText || line.name} — Ост. ${count++}`,
+                x: sx, y: sy,
+                style: 'metro-tick', colorMode: 'line', tickShift: 'auto',
+                customColor: '#ffffff',
+                labelPos: STATE.globalStyles.labelPos || 'top-right',
+                labelAngle: STATE.globalStyles.labelAngle || 315,
+                tickLen: 9, isTerminal: false,
+                lineIds: [line.id],
+                autoLineId: line.id
+              });
+            }
+            pos += stepDist;
+          }
+          distAccum = (segLen - (pos - stepDist));
+        }
+      });
+
+      refreshCanvas();
+    }
+
     function handleLineStartFromStation(st) {
       pushHistory();
       const pt = { x: st.x, y: st.y };
@@ -5477,9 +5733,15 @@
       const temp = clone.querySelector('#temp-layer');
       if (temp) temp.innerHTML = '';
 
-      clone.querySelectorAll('.map-vertex-handle, .map-insert-handle').forEach(el => el.remove());
+      // Удаляем хитбоксы и ручки узлов, которые дают чёрные плашки
+      clone.querySelectorAll('.map-vertex-handle, .map-insert-handle, .map-line-hitbox').forEach(el => el.remove());
+
+      // Гарантируем отсутствие чёрной заливки у всех линий и кривых
       clone.querySelectorAll('path').forEach(p => {
-        if (!p.getAttribute('fill') || p.getAttribute('fill') === 'black') p.setAttribute('fill', 'none');
+        const f = p.getAttribute('fill');
+        if (!f || f === 'black' || p.classList.contains('map-line-path')) {
+          p.setAttribute('fill', 'none');
+        }
       });
 
       return clone;
@@ -5492,21 +5754,13 @@
       const blob = new Blob([clone.outerHTML], { type: 'image/svg+xml;charset=utf-8' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = `MURScheme_view_${framing.aspectChoice.replace(':', 'x')}_${framing.finalW}x${framing.finalH}.svg`;
+      const customName = (document.getElementById('export-filename-input')?.value || 'MURScheme_view').trim();
+      a.download = `${customName}_${framing.finalW}x${framing.finalH}.svg`;
       a.click();
       DBG.log(`[EXPORT] Активное окно экспортировано в SVG (${framing.finalW}x${framing.finalH})`, 'success');
     }
 
     function exportCleanRaster(format) {
-      if (format === 'json') {
-        const blob = new Blob([JSON.stringify(STATE, null, 2)], { type: 'application/json' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'murscheme_data.json';
-        a.click();
-        return;
-      }
-
       const framing = getExportFraming();
       const clone = prepareExportClone(framing);
       const svgData = new XMLSerializer().serializeToString(clone);
@@ -5520,8 +5774,12 @@
         canvas.height = framing.finalH;
         const ctx = canvas.getContext('2d');
 
+        ctx.clearRect(0, 0, framing.finalW, framing.finalH);
+        ctx.save();
+        ctx.globalAlpha = (STATE.globalStyles.canvasOpacity !== undefined ? STATE.globalStyles.canvasOpacity : 100) / 100;
         ctx.fillStyle = STATE.globalStyles.canvasBg || '#ffffff';
         ctx.fillRect(0, 0, framing.finalW, framing.finalH);
+        ctx.restore();
         ctx.drawImage(img, 0, 0, framing.finalW, framing.finalH);
         URL.revokeObjectURL(url);
 
@@ -5533,7 +5791,8 @@
           canvas.toBlob((blob) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = `MURScheme_view_${framing.aspectChoice.replace(':', 'x')}_${framing.finalW}x${framing.finalH}.${format}`;
+            const customName = (document.getElementById('export-filename-input')?.value || 'MURScheme_view').trim();
+            a.download = `${customName}_${framing.finalW}x${framing.finalH}.${format}`;
             a.click();
             DBG.log(`[EXPORT] Активное окно экспортировано в ${framing.finalW}x${framing.finalH} (${format.toUpperCase()})`, 'success');
           }, mimeType, 0.95);
@@ -5561,8 +5820,22 @@
       bind('btn-acc-collapse-all', 'click', () => {
         document.querySelectorAll('.accordion-section').forEach(s => s.classList.add('collapsed'));
       });
+      bind('global-curve-radius-input', 'input', (e) => {
+        const r = parseInt(e.target.value) || 18;
+        STATE.globalStyles.curveRadius = r;
+        const badge = document.getElementById('global-curve-radius-val');
+        if (badge) badge.textContent = `${r}px`;
+        renderLines();
+        renderDecorations();
+      });
 
       bind('btn-floating-debug', 'click', () => toggleDebugConsole(true));
+
+      /* Остановки */
+
+      bind('btn-auto-place-stations', 'click', autoPlaceStationsOnActiveLine);
+
+      bind('station-search-input', 'input', renderStationsList);
 
       // Шаблоны легенды
       bind('btn-tmpl-muromorsk', 'click', () => {
@@ -5835,7 +6108,39 @@
         }
       });
 
-      // 1. В обработчике положения подписи остановки (около строки 2909):
+      // Холст
+      bind('canvas-bg-opacity', 'input', () => applyGlobalsLive(false));
+
+      bind('canvas-image-file', 'change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          pushHistory();
+          STATE.globalStyles.substrateImageUrl = evt.target.result;
+          updateSubstrate();
+          DBG.log('[CANVAS] Фоновая картинка загружена', 'success');
+        };
+        reader.readAsDataURL(file);
+      });
+
+      bind('canvas-image-opacity', 'input', (e) => {
+        const val = parseInt(e.target.value) || 0;
+        STATE.globalStyles.substrateOpacity = val / 100;
+        const badge = document.getElementById('canvas-img-opacity-val');
+        if (badge) badge.textContent = `${val}%`;
+        updateSubstrate();
+      });
+
+      bind('btn-remove-substrate-image', 'click', () => {
+        pushHistory();
+        STATE.globalStyles.substrateImageUrl = '';
+        const fileInput = document.getElementById('canvas-image-file');
+        if (fileInput) fileInput.value = '';
+        updateSubstrate();
+        DBG.log('[CANVAS] Фоновая подложка удалена', 'action');
+      });
+
       bind('prop-station-style', 'change', (e) => {
         const st = STATE.stations.find(s => s.id === STATE.selectedStationId);
         if (st) {
@@ -5847,7 +6152,13 @@
         }
       });
 
-      // 2. В обработчике глобального угла подписей (около строки 2952):
+      bind('global-sync-font-size', 'change', (e) => {
+        pushHistory();
+        STATE.globalStyles.syncFontSize = e.target.checked;
+        renderStations();
+        renderTerminals();
+      });
+
       bind('global-label-angle-input', 'input', (e) => {
         const angle = parseInt(e.target.value) || 0;
         STATE.globalStyles.labelAngle = angle;
@@ -5886,10 +6197,115 @@
         if (hint) hint.textContent = '🌿 Режим подветки: кликните по станции или точке линии и нарисуйте ответвление (Enter / Двойной клик для завершения)';
       });
 
+      // Глобальный авто-перевод и цвет
+      bind('btn-global-auto-translate', 'click', () => autoTranslateAllMap('en'));
+      bind('global-sublabel-color', 'input', (e) => {
+        STATE.globalStyles.sublabelColor = e.target.value;
+        renderStations();
+        renderTerminals();
+        renderTerrainLabels();
+      });
+
+      // Остановки
+      bind('prop-station-subname', 'input', (e) => {
+        const st = STATE.stations.find(s => s.id === STATE.selectedStationId);
+        if (st) { st.subname = e.target.value; renderStations(); renderTerminals(); }
+      });
+      bind('prop-station-subcolor', 'input', (e) => {
+        const st = STATE.stations.find(s => s.id === STATE.selectedStationId);
+        if (st) { st.subcolor = e.target.value; renderStations(); renderTerminals(); }
+      });
+      bind('btn-translate-station', 'click', async () => {
+        const st = STATE.stations.find(s => s.id === STATE.selectedStationId);
+        if (!st || !st.name) return;
+        const trans = await translateText(st.name, 'en');
+        if (trans) {
+          st.subname = trans;
+          const inp = document.getElementById('prop-station-subname');
+          if (inp) inp.value = trans;
+          renderStations();
+          renderTerminals();
+        }
+      });
+
+      // Терминалы
+      bind('term-subtitle-input', 'input', (e) => {
+        STATE.terminalsSettings.subtitleText = e.target.value;
+        renderTerminals();
+      });
+      bind('term-subtitle-color', 'input', (e) => {
+        STATE.terminalsSettings.subtitleColor = e.target.value;
+        renderTerminals();
+      });
+      bind('btn-translate-term-auto', 'click', async () => {
+        if (!STATE.terminalsSettings.titleText) return;
+        const trans = await translateText(STATE.terminalsSettings.titleText, 'en');
+        if (trans) {
+          STATE.terminalsSettings.subtitleText = trans;
+          const inp = document.getElementById('term-subtitle-input');
+          if (inp) inp.value = trans;
+          renderTerminals();
+        }
+      });
+
+      bind('prop-term-subname', 'input', (e) => {
+        const term = (STATE.terminals || []).find(t => t.id === STATE.selectedTerminalId);
+        if (term) { term.subname = e.target.value; renderTerminals(); }
+      });
+      bind('prop-term-subcolor', 'input', (e) => {
+        const term = (STATE.terminals || []).find(t => t.id === STATE.selectedTerminalId);
+        if (term) { term.subcolor = e.target.value; renderTerminals(); }
+      });
+      bind('btn-translate-term-manual', 'click', async () => {
+        const term = (STATE.terminals || []).find(t => t.id === STATE.selectedTerminalId);
+        if (!term || !term.name) return;
+        const trans = await translateText(term.name, 'en');
+        if (trans) {
+          term.subname = trans;
+          const inp = document.getElementById('prop-term-subname');
+          if (inp) inp.value = trans;
+          renderTerminals();
+        }
+      });
+
+      // Надписи местности
+      bind('prop-tlabel-subtext', 'input', (e) => {
+        const tl = STATE.terrainLabels.find(t => t.id === STATE.selectedTerrainLabelId);
+        if (tl) { tl.subtext = e.target.value; renderTerrainLabels(); }
+      });
+      bind('prop-tlabel-subcolor', 'input', (e) => {
+        const tl = STATE.terrainLabels.find(t => t.id === STATE.selectedTerrainLabelId);
+        if (tl) { tl.subcolor = e.target.value; renderTerrainLabels(); }
+      });
+      bind('btn-translate-tlabel', 'click', async () => {
+        const tl = STATE.terrainLabels.find(t => t.id === STATE.selectedTerrainLabelId);
+        if (!tl || !tl.text) return;
+        const trans = await translateText(tl.text, 'en');
+        if (trans) {
+          tl.subtext = trans;
+          const inp = document.getElementById('prop-tlabel-subtext');
+          if (inp) inp.value = trans;
+          renderTerrainLabels();
+        }
+      });
+
+      // Легенда
+      bind('leg-subtitle-color', 'input', (e) => {
+        STATE.legend.subtitleColor = e.target.value;
+        renderLegend();
+      });
+
       // События мыши на холсте
       if (viewport) {
         viewport.addEventListener('mousedown', (e) => {
           const { x, y } = screenToWorld(e.clientX, e.clientY);
+
+          if (STATE.currentTool === 'select') {
+            const isTargetCanvas = (e.target.id === 'canvas-svg' || e.target.id === 'canvas-substrate-rect' || e.target.id === 'canvas-substrate-image' || e.target.tagName === 'rect');
+            if (isTargetCanvas && !e.target.closest('.map-station-element, .map-transfer-element, .map-decor-element, .terminal-group-element, .map-legend-card, .map-terrain-label')) {
+              clearAllSelections();
+            }
+          }
 
           if (STATE.currentTool === 'select' || e.button === 1 || e.code === 'Space') {
             const isTargetCanvas = (e.target.id === 'canvas-svg' || e.target.id === 'canvas-substrate-rect' || e.target.tagName === 'rect');
@@ -6044,6 +6460,8 @@
               dec.points[STATE.draggingVertex.pointIndex] = { x: snapToGrid(x), y: snapToGrid(y) };
               renderDecorations();
               renderHandles();
+              renderStations();
+              renderTransfers();
             }
           }
           return;
@@ -6103,13 +6521,13 @@
       window.addEventListener('keydown', (e) => {
         if (['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) return;
 
-        if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z')) {
+        if ((e.ctrlKey || e.metaKey) && e.code === 'KeyZ') {
           e.preventDefault();
           if (e.shiftKey) applyRedo();
           else applyUndo();
           return;
         }
-        if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || e.key === 'Y')) {
+        if ((e.ctrlKey || e.metaKey) && e.code === 'KeyY') {
           e.preventDefault();
           applyRedo();
           return;
@@ -6117,12 +6535,12 @@
 
         if (e.key === 'Enter' && (STATE.currentTool === 'line' || STATE.currentTool === 'decor')) finishCurrentLine();
         if (e.key === 'Escape') { STATE.tempPoints = []; if (tempLayer) tempLayer.innerHTML = ''; }
-        if (e.key === 'v' || e.key === 'V') setTool('select');
-        if (e.key === 'l' || e.key === 'L') setTool('line');
-        if (e.key === 's' || e.key === 'S') setTool('station');
-        if (e.key === 'x' || e.key === 'X') setTool('transfer');
-        if (e.key === 'd' || e.key === 'D') setTool('decor');
-        if (e.key === 'b' || e.key === 'B') setTool('paint');
+        if (e.code === 'KeyV') setTool('select');
+        if (e.code === 'KeyL') setTool('line');
+        if (e.code === 'KeyS') setTool('station');
+        if (e.code === 'KeyX') setTool('transfer');
+        if (e.code === 'KeyD') setTool('decor');
+        if (e.code === 'KeyB') setTool('paint');
       });
 
       const setTool = (tool) => {
@@ -6205,21 +6623,25 @@
 
       bind('btn-add-terrain-label', 'click', () => {
         pushHistory();
+        const vRect = svg.getBoundingClientRect();
+        // Находим мировые координаты центра экрана
+        const center = screenToWorld(vRect.left + vRect.width / 2, vRect.top + vRect.height / 2);
+
         const newLab = {
           id: 'tlab-' + Date.now(),
-          text: 'БАЛТИЙСКОЕ МОРЕ',
-          subtext: 'BALTIC SEA',
-          x: Math.round(-STATE.panX + 300),
-          y: Math.round(-STATE.panY + 200),
+          text: 'НАЗВАНИЕ МЕСТНОСТИ',
+          subtext: '',
+          x: snapToGrid(center.x),
+          y: snapToGrid(center.y),
           angle: 0,
-          color: '#7bb2c9',
-          size: 13,
+          color: '#000000', // Чёрный по умолчанию
+          size: 14,
           spacing: 6
         };
         STATE.terrainLabels.push(newLab);
         renderTerrainLabels();
         selectTerrainLabel(newLab.id);
-        DBG.log(`[TERRAIN] Создана новая надпись местности в (${newLab.x}, ${newLab.y})`, 'action');
+        DBG.log(`[TERRAIN] Создана новая надпись: (${newLab.x}, ${newLab.y})`, 'action');
       });
 
       bind('prop-tlabel-text', 'input', (e) => {
@@ -6372,11 +6794,11 @@
       });
       bind('prop-decor-color', 'input', (e) => {
         const d = STATE.decorations.find(i => i.id === STATE.activeDecorId);
-        if (d) { d.color = e.target.value; renderDecorations(); renderDecorList(); }
+        if (d) { d.color = e.target.value; renderDecorations(); renderDecorList(); renderStations(); }
       });
       bind('prop-decor-width', 'input', (e) => {
         const d = STATE.decorations.find(i => i.id === STATE.activeDecorId);
-        if (d) { d.width = parseFloat(e.target.value) || 6.5; renderDecorations(); }
+        if (d) { d.width = parseFloat(e.target.value) || 6.5; renderDecorations(); renderStations(); }
       });
       bind('prop-decor-show-label', 'change', (e) => {
         const d = STATE.decorations.find(i => i.id === STATE.activeDecorId);
@@ -6556,6 +6978,7 @@
 
       // Глобальные настройки
       const applyGlobalsLive = (updateStations = false) => {
+
         const fontEl = document.getElementById('global-font-select');
         if (fontEl) STATE.globalStyles.fontFamily = fontEl.value;
 
@@ -6564,6 +6987,13 @@
 
         const bgEl = document.getElementById('canvas-bg-color');
         if (bgEl) STATE.globalStyles.canvasBg = bgEl.value;
+
+        const opEl = document.getElementById('canvas-bg-opacity');
+        if (opEl) {
+          STATE.globalStyles.canvasOpacity = parseInt(opEl.value);
+          const opVal = document.getElementById('canvas-opacity-val');
+          if (opVal) opVal.textContent = `${STATE.globalStyles.canvasOpacity}%`;
+        }
 
         const angleEl = document.getElementById('global-label-angle-input');
         if (angleEl) {
@@ -6680,12 +7110,23 @@
       bind('leg-width', 'input', (e) => { STATE.legend.width = parseInt(e.target.value) || 300; renderLegend(); });
 
       // Сохранение и загрузка проекта
+      bind('btn-project-menu-toggle', 'click', (e) => {
+        e.stopPropagation();
+        document.getElementById('export-dropdown-panel')?.classList.remove('open');
+        document.getElementById('project-dropdown-panel')?.classList.toggle('open');
+      });
+
       bind('btn-save-project', 'click', () => {
+        const rawName = (document.getElementById('project-filename-input')?.value || 'murscheme_project').trim();
+        const fileName = rawName.endsWith('.json') ? rawName : `${rawName}.json`;
+        STATE.palette = getUsedPalette();
         const blob = new Blob([JSON.stringify(STATE, null, 2)], { type: 'application/json' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = 'murscheme_project.json';
+        a.download = fileName;
         a.click();
+        document.getElementById('project-dropdown-panel')?.classList.remove('open');
+        DBG.log(`[PROJECT] Проект сохранён. В палитру схемы записано цветов: ${STATE.palette.length}`, 'success');
       });
       bind('btn-load-project', 'click', () => {
         const fileInput = document.getElementById('file-input-project');
