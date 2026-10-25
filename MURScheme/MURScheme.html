@@ -609,15 +609,24 @@
         </div>
       </div>
     </div>
+        <!-- Выбор языка интерфейса + подгрузка своего JSON-перевода -->
+    <div style="display:flex; align-items:center; gap:4px;">
+      <select id="ui-lang-select" style="padding: 4px 6px;" title="Language / Язык">
+        <option value="ru">🇷🇺 RU</option>
+        <option value="en">🇬🇧 EN</option>
+      </select>
+      <button class="btn" id="btn-load-locale" title="Load custom translation (.json)">🌐+</button>
+      <input type="file" id="file-input-locale" accept=".json" style="display:none;">
+    </div>
   </header>
 
   <!-- ОСНОВНАЯ РАБОЧАЯ ОБЛАСТЬ -->
   <div class="workspace">
     <!-- Панель инструментов слева -->
     <div class="toolbar-left">
-      <button class="tool-btn active" id="tool-select" data-tooltip="Выбор и перемещение по карте ЛКМ (V)">👆</button>
-      <button class="tool-btn" id="tool-line" data-tooltip="Добавить участок трассы к линии (L)">🚇</button>
-      <button class="tool-btn" id="tool-station" data-tooltip="Поставить остановку (S)">⚪</button>
+      <button class="tool-btn active" id="tool-select" data-i18n-tooltip="tool.select" data-tooltip="Выбор и перемещение по карте ЛКМ (V)">👆</button>
+      <button class="tool-btn" id="tool-line" data-i18n-tooltip="tool.line" data-tooltip="Добавить участок трассы к линии (L)">🚇</button>
+      <button class="tool-btn" id="tool-station" data-i18n-tooltip="tool.station" data-tooltip="Поставить остановку (S)">⚪</button>
       <button class="tool-btn" id="tool-transfer" data-tooltip="Создать пересадку (X)">⇄</button>
       <button class="tool-btn" id="tool-decor" data-tooltip="Добавить декоративный путь (D)">🛤️</button>
       <button class="tool-btn" id="tool-paint" data-tooltip="Окрасить местность (B)">🖌️</button>
@@ -1372,7 +1381,7 @@
         <!-- 2. ЛИНИИ И МАРШРУТЫ -->
         <div class="accordion-section" id="acc-sec-lines">
           <div class="accordion-header" onclick="toggleAccordion('acc-sec-lines')">
-            <span>Линии и маршруты</span>
+            <span><span data-i18n="acc.lines">Линии и маршруты</span></span>
             <span class="acc-arrow">▼</span>
           </div>
           <div class="accordion-body">
@@ -1909,6 +1918,575 @@
   </div>
 
   <script>
+
+  /* =========================================================================
+     МОДУЛЬ 0: ПРОСТРАНСТВО ПЕРЕВОДОВ И ЛОКАЛИЗАЦИЯ (I18N + MAP I18N)
+     ========================================================================= */
+  const I18N = {
+    currentLang: localStorage.getItem('murscheme_lang') || 'ru',
+    fallbackLang: 'en',
+    mapDisplayMode: localStorage.getItem('murscheme_map_lang') || 'bilingual', // 'bilingual' | 'ru' | 'en' | 'ui'
+
+    locales: {
+      ru: {
+        'tool.select': 'Выбор и перемещение по карте ЛКМ (V)',
+        'tool.line': 'Добавить участок трассы к линии (L)',
+        'tool.station': 'Поставить остановку (S)',
+        'acc.lines': 'Линии и маршруты'
+      },
+      en: {
+        // Ключи data-i18n
+        'tool.select': 'Select and pan map with LMB (V)',
+        'tool.line': 'Add track segment to line (L)',
+        'tool.station': 'Place station (S)',
+        'acc.lines': 'Lines & Routes',
+
+        // Верхняя панель (Header) и меню экспорта/проекта
+        'MURScheme — Редактор транспортных схем MURS': 'MURScheme — MURS Transit Scheme Editor',
+        'Отменить (Ctrl+Z)': 'Undo (Ctrl+Z)',
+        'Повторить (Ctrl+Y)': 'Redo (Ctrl+Y)',
+        'Сетка:': 'Grid:',
+        '45° (Классика)': '45° (Classic)',
+        'Свободно': 'Free',
+        'Тип объекта для инструмента трассировки': 'Object type for the line drawing tool',
+        '🚇 Линия ОТ': '🚇 Transit Line',
+        '🛤️ Декорация: Линия ЖД': '🛤️ Decor: Railway',
+        '🛣️ Декорация: Линия дороги': '🛣️ Decor: Road',
+        '📍 Декорация: Двойная пунктирная линия': '📍 Decor: Double Dashed Line',
+        '🚇 Декорация: Тонкая линия': '🚇 Decor: Thin Line',
+        '🗑️ Очистить всё': '🗑️ Clear All',
+        'Очистить схему полностью': 'Clear the entire scheme',
+        '💾 Проект ▾': '💾 Project ▾',
+        '🗂️ Сохранение и загрузка схемы': '🗂️ Save & Load Scheme',
+        'Имя файла:': 'Filename:',
+        '💾 Скачать .json': '💾 Download .json',
+        '📂 Загрузить .json': '📂 Load .json',
+        '📥 Скачать ▾': '📥 Export ▾',
+        '⚙️ Параметры экспорта схемы': '⚙️ Scheme Export Settings',
+        'Кадр:': 'Frame:',
+        '📺 Активное окно': '📺 Active Viewport',
+        '16:9 (Широкоформатный)': '16:9 (Widescreen)',
+        '4:3 (Классика)': '4:3 (Classic)',
+        '1:1 (Квадрат)': '1:1 (Square)',
+        '21:9 (Ультраширокий)': '21:9 (Ultrawide)',
+        'Пользовательский...': 'Custom...',
+        'Качество:': 'Quality:',
+        '1x (Стандарт)': '1x (Standard)',
+        'Формат:': 'Format:',
+        'PNG (Без сжатия)': 'PNG (Lossless)',
+        'WEBP (Оптимизировано)': 'WEBP (Optimized)',
+        'JPG (Фото)': 'JPG (Photo)',
+        'Векторный SVG': 'Vector SVG',
+        '📥 Скачать файл': '📥 Download File',
+
+        // Левая панель инструментов и статус-бар
+        'Выбор и перемещение по карте ЛКМ (V)': 'Select and pan map with LMB (V)',
+        'Добавить участок трассы к линии (L)': 'Add track segment to line (L)',
+        'Поставить остановку (S)': 'Place station (S)',
+        'Создать пересадку (X)': 'Create transfer (X)',
+        'Добавить декоративный путь (D)': 'Add decorative path (D)',
+        'Окрасить местность (B)': 'Paint terrain (B)',
+        'Написать текст (T)': 'Add text label (T)',
+        'Добавить объект (I)': 'Add object / icon (I)',
+        'Режим: Выбор (Перемещение ЛКМ)': 'Mode: Select (Pan with LMB)',
+        '[Кликните ⇄ для связывания двух станций пересадкой]': '[Click ⇄ to link two stations with a transfer]',
+        '🐞 Логи': '🐞 Logs',
+
+        // Правая панель и заголовки вкладок
+        'Панель управления': 'Control Panel',
+        'Развернуть все': 'Expand All',
+        'Свернуть все': 'Collapse All',
+        'Свойства выбранного': 'Selected Properties',
+        '✏️ Свойства выбранного': '✏️ Selected Properties',
+        '✏️ Свойства линии': '✏️ Line Properties',
+        '✏️ Свойства остановки': '✏️ Station Properties',
+        '✏️ Свойства конечного терминала': '✏️ Terminal Properties',
+        '✏️ Свойства пересадки': '✏️ Transfer Properties',
+        '✏️ Свойства декорации': '✏️ Decoration Properties',
+        '📝 Свойства текста': '📝 Text Properties',
+        '📍 Свойства объекта': '📍 Object Properties',
+        'Линии и маршруты': 'Lines & Routes',
+        'Остановки и станции': 'Stops & Stations',
+        'Пересадочные узлы и связки': 'Transfer Hubs & Links',
+        'Параллельные пучки маршрутов': 'Parallel Route Bundles',
+        'Декоративные пути': 'Decorative Paths',
+        'Окрашивание местности и акваторий': 'Terrain & Water Painting',
+        'Объекты и текстовые надписи': 'Map Objects & Text Labels',
+        'Легенда маршрутов': 'Route Legend',
+        'Глобальные параметры и тени': 'Global Parameters & Shadows',
+        'Закреплено по умолчанию': 'Pinned by default',
+        'Закрепить / открепить вкладку наверху': 'Pin / unpin tab at the top',
+        'Кликните на линию, остановку, пересадку или дорогу для редактирования': 'Click on a line, station, transfer, or road to edit',
+
+        // Свойства линии и стрелок
+        'Название:': 'Name:',
+        'Подзаголовок:': 'Subtitle:',
+        'Цвет линии:': 'Line color:',
+        'Номер / Бейдж:': 'Number / Badge:',
+        'Толщина (px):': 'Width (px):',
+        'Стиль линии:': 'Line style:',
+        'Сплошная': 'Solid',
+        'Внутренне полая': 'Inner hollow',
+        'ЖД (жирный пунктир)': 'Railway (bold dashed)',
+        'ЖД (шашки со шпалами)': 'Railway (checkered ties)',
+        'Двойная параллельная': 'Double parallel',
+        'Экспресс': 'Express',
+        'Штрихованная': 'Dashed',
+        'Точечная': 'Dotted',
+        'С тёмным контуром': 'Dark cased',
+        'Стрелки направления:': 'Direction arrows:',
+        'Без стрелок': 'No arrows',
+        'По ходу (→)': 'Forward (→)',
+        'Против хода (←)': 'Backward (←)',
+        'В обе стороны (↔)': 'Both directions (↔)',
+        'Только ручные': 'Manual only',
+        'Стиль стрелок:': 'Arrow style:',
+        'Треугольные': 'Triangle',
+        'Шеврон (галочка)': 'Chevron',
+        'Острые (стрела)': 'Stealth',
+        'Белые внутри линии': 'White inner',
+        'Интервал:': 'Interval:',
+        'Ширина (px):': 'Width (px):',
+        'Высота (px):': 'Height (px):',
+        'Ноды и участки стрелок:': 'Arrow nodes & segments:',
+        'Все': 'All',
+        'Сброс': 'Reset',
+        'Включить на всех участках': 'Enable on all segments',
+        'Отключить все участки': 'Disable all segments',
+        '🎯 Выбрать ноды на карте (клик по 2 нодам)': '🎯 Pick nodes on map (click 2 nodes)',
+        '✅ Режим выбора нод активен (кликните 2 ноды)': '✅ Node pick mode active (click 2 nodes)',
+        'Ручные стрелки:': 'Manual arrows:',
+        '➕ Добавить по клику': '➕ Add by click',
+        '✅ Кликните на линию...': '✅ Click on the line...',
+        'Смещение в пучке:': 'Bundle offset:',
+        'Подветки (ответвления):': 'Branches (forks):',
+        '🌿 + Подветка': '🌿 + Branch',
+        'Шаг авто-остановок (px):': 'Auto-stops step (px):',
+        '⚡ Расставить остановки автоматически': '⚡ Auto-place stations',
+        'Удалить линию': 'Delete line',
+
+        // Свойства остановки
+        'Стиль засечки:': 'Tick / marker style:',
+        'Прямоугольный выступ': 'Rectangular tick',
+        'Закруглённый выступ': 'Rounded tick',
+        'Гладкая лесенка со скруглениями': 'Smooth rounded ladder',
+        'Сквозной прямоугольник': 'Cross-through rectangle',
+        'Чёрные точки': 'Inner black dots',
+        'Пересадочный кружок с контуром': 'Interchange circle (bordered)',
+        'Пересадочный кружок без контура': 'Interchange circle (borderless)',
+        'Классический кружок без контура': 'Classic circle (borderless)',
+        'Капсула (горизонтальная)': 'Capsule (horizontal)',
+        'Капсула (вертикальная)': 'Capsule (vertical)',
+        'Капсула (нейтральная)': 'Capsule (neutral)',
+        'Капсула (вертикальная нейтральная)': 'Capsule (vertical neutral)',
+        'Цвет засечки:': 'Tick color:',
+        'Цвет линии (по умолчанию)': 'Line color (default)',
+        'Полосы всех линий пучка': 'Stripes of all bundle lines',
+        'Белый': 'White',
+        'Чёрный': 'Black',
+        'Пользовательский цвет': 'Custom color',
+        'Смещение выступа:': 'Tick shift:',
+        'В сторону подписи (авто)': 'Towards label (auto)',
+        'Ступенчатая лесенка': 'Staggered ladder',
+        'В противоположную сторону': 'Opposite side',
+        'Свой цвет засечки:': 'Custom tick color:',
+        'Положение подписи:': 'Label position:',
+        'Сверху-справа (↗)': 'Top-right (↗)',
+        'Сверху-слева (↖)': 'Top-left (↖)',
+        'Снизу-справа (↘)': 'Bottom-right (↘)',
+        'Снизу-слева (↙)': 'Bottom-left (↙)',
+        'Сверху (↑)': 'Top (↑)',
+        'Снизу (↓)': 'Bottom (↓)',
+        'Справа (→)': 'Right (→)',
+        'Слева (←)': 'Left (←)',
+        'Вторичная подпись:': 'Secondary label:',
+        'Перевести через Google': 'Translate via Google',
+        'Перевести': 'Translate',
+        'Цвет вторичной подписи:': 'Secondary label color:',
+        'Иконки маршрутов у подписи:': 'Route badges near label:',
+        'Форма иконок:': 'Badge shape:',
+        'Круг': 'Circle',
+        'Квадрат': 'Square',
+        'Прямоугольник': 'Rectangle',
+        'Позиция иконок:': 'Badge position:',
+        'Слева': 'Left',
+        'Справа': 'Right',
+        'Сверху': 'Top',
+        'Снизу': 'Bottom',
+        'Сверху-слева': 'Top-left',
+        'Сверху-справа': 'Top-right',
+        'Снизу-слева': 'Bottom-left',
+        'Снизу-справа': 'Bottom-right',
+        'Размер иконок (px):': 'Badge size (px):',
+        'Маршруты через эту остановку:': 'Routes serving this station:',
+        'Удалить станцию': 'Delete station',
+
+        // Свойства пересадки
+        'Стиль пересадки:': 'Transfer style:',
+        'Радиальная дуга с градиентом и контуром': 'Radial arc (gradient & border)',
+        'Радиальная дуга со сплошным градиентом': 'Radial arc (solid gradient)',
+        'Белая дуга с градиентными стенками': 'White arc with gradient walls',
+        'Радиальная дуга без градиента': 'Radial arc (neutral)',
+        'Градиентный круговой переход': 'Circular hub transfer',
+        'Круговой градиент без контуров': 'Circular gradient (borderless)',
+        'Гантель': 'Dumbbell',
+        'Пунктирный переход': 'Dotted walk link',
+        'Капсула': 'Stadium capsule',
+        'Кривизна дуги (px):': 'Arc curvature (px):',
+        'Длина штриха (px):': 'Dash length (px):',
+        'Интервал пунктира (px):': 'Dash gap (px):',
+        'Толщина пунктира (px):': 'Dash width (px):',
+        'Цвет пунктира:': 'Dash color:',
+        'Станции в связке (2 или более):': 'Linked stations (2 or more):',
+        'Удалить пересадку': 'Delete transfer',
+
+        // Свойства декораций
+        'Название объекта:': 'Object name:',
+        'Тип пути:': 'Path type:',
+        'Линия дороги': 'Road line',
+        'Линия ЖД': 'Railway line',
+        'Двойная пунктирная линия': 'Double dashed line',
+        'Тонкая линия': 'Thin line',
+        'Цвет полотна:': 'Track color:',
+        'Ширина полотна (px):': 'Track width (px):',
+        'Название вдоль дороги:': 'Show label along road:',
+        'Повторять название:': 'Repeat road label:',
+        'Текст дороги:': 'Road text:',
+        'ПРОСПЕКТ ЛЕНИНА': 'MAIN AVENUE',
+        'Вторичная надпись:': 'Secondary text:',
+        'Позиция подписи дороги:': 'Road label position:',
+        'По центру полотна': 'Center of road',
+        'Сверху пути': 'Above path',
+        'Снизу пути': 'Below path',
+        'Положение вторичной надписи:': 'Secondary text position:',
+        'Справа от названия': 'Right of main text',
+        'Слева от названия': 'Left of main text',
+        'Цвет текста дороги:': 'Road text color:',
+        'Цвет вторичного текста:': 'Secondary text color:',
+        'Кегль текста (px):': 'Font size (px):',
+        'Интервал повтора (px):': 'Repeat interval (px):',
+        'Пересечение путей:': 'Path crossing mode:',
+        'Наложение': 'Overpass (bridge)',
+        'Слияние': 'Seamless junction',
+        '🔀 Создать бесшовные перекрёстки на пересечениях': '🔀 Create seamless intersections at crossings',
+        'Удалить декорацию': 'Delete decoration',
+
+        // Свойства текста и объектов (POI)
+        'Координаты узла (Node Position)': 'Node Position',
+        'Параметры текста': 'Text Parameters',
+        'Текст надписи:': 'Label text:',
+        'Subtext / перевод': 'Subtext / translation',
+        'Кегль (px):': 'Font size (px):',
+        'Межстрочн.:': 'Line height:',
+        'Разрядка букв (px):': 'Letter spacing (px):',
+        'Выравнивание:': 'Alignment:',
+        'По центру': 'Center',
+        'Базовая линия:': 'Baseline:',
+        'Авто (Auto)': 'Auto',
+        'Шрифт:': 'Font:',
+        'Как у всей схемы': 'Same as global scheme',
+        'Поворот:': 'Rotation:',
+        'Жирный (Bold)': 'Bold',
+        'Курсив (Italic)': 'Italic',
+        'Обводка (px):': 'Outline (px):',
+        'Цвет обводки': 'Outline color',
+        'Цвет текста / вторичного:': 'Text / secondary color:',
+        'Основной цвет': 'Primary color',
+        'Цвет вторичной надписи': 'Secondary label color',
+        '📋 Дублир.': '📋 Duplicate',
+        '📄 Копир.': '📄 Copy',
+        '🗑️ Удалить': '🗑️ Delete',
+        '🎨 Копировать стиль': '🎨 Copy style',
+        '🖌️ Вставить стиль': '🖌️ Paste style',
+        'Координаты объекта': 'Object Coordinates',
+        'Иконка или изображение с диска': 'Icon or Image from Disk',
+        'Тип иконки:': 'Icon type:',
+        '🖼️ Своя картинка / иконка с диска': '🖼️ Custom image / icon from disk',
+        '📍 Эмодзи / Символ': '📍 Emoji / Symbol',
+        '🔵 Векторный пин-значок': '🔵 Vector pin badge',
+        '📂 Выбрать иконку / картинку с диска...': '📂 Choose icon / image from disk...',
+        'Поддерживаются PNG, SVG, WEBP, JPG, ICO': 'Supports PNG, SVG, WEBP, JPG, ICO',
+        'Символ / эмодзи:': 'Symbol / emoji:',
+        'Цвет значка / пина:': 'Badge / pin color:',
+        'Размер (px):': 'Size (px):',
+        'Непрозр. (%):': 'Opacity (%):',
+        'Поворот иконки:': 'Icon rotation:',
+        'Подпись объекта': 'Object Label',
+        'Вокзал / Аэропорт': 'Station / Airport',
+        'Позиция подписи:': 'Label position:',
+        'Снизу от иконки (↓)': 'Below icon (↓)',
+        'Сверху от иконки (↑)': 'Above icon (↑)',
+        'Справа от иконки (→)': 'Right of icon (→)',
+        'Слева от иконки (←)': 'Left of icon (←)',
+        'Без подписи': 'No label',
+        'Шрифт (px) и цвета:': 'Font (px) & colors:',
+        '📋 Дублировать': '📋 Duplicate',
+        '🗑️ Удалить объект': '🗑️ Delete object',
+
+        // Терминалы и списки
+        'Название конечной (или пусто)': 'Terminal name (or empty)',
+        'Ориентация значков:': 'Badges orientation:',
+        'Горизонтально (в строку)': 'Horizontal (row)',
+        'Вертикально (в столбик)': 'Vertical (column)',
+        'Форма бейджей:': 'Badge shape:',
+        'Как в общих настройках': 'Same as global settings',
+        'Круги': 'Circles',
+        'Квадраты': 'Squares',
+        'Таблички': 'Rectangles',
+        'Прямоугольники': 'Rectangles',
+        'Торцевые плашки': 'End capsules',
+        'Слитный стек': 'Merged stack',
+        'Маршруты на этой конечной:': 'Routes at this terminal:',
+        'Удалить терминал': 'Delete terminal',
+        'Маршруты сети и терминалы': 'Network routes & terminals',
+        '+ Линия': '+ Line',
+        'Cтанции сети': 'Network stations',
+        '+ Остановка': '+ Station',
+        '🔍 Поиск остановки по названию...': '🔍 Search station by name...',
+        'Конечные терминалы:': 'End Terminals:',
+        '⚡ Сформировать': '⚡ Generate',
+        '+ Терминал': '+ Terminal',
+        'Авто-формирование на концах:': 'Auto-generate at line ends:',
+        '🔍 Поиск конечной...': '🔍 Search terminal...',
+        'Название конечной:': 'Terminal name:',
+        'Пусто (без подписи)': 'Empty (no label)',
+        'Привязка к линии:': 'Line attachment:',
+        'Прямо на рельсах (цвет-в-цвет)': 'Directly on tracks (color-matched)',
+        'В торце рельсов (цвет-в-цвет)': 'At track butts (color-matched)',
+        'В торце пучка (по ходу пути)': 'At bundle end (along track)',
+        'Прямо на линии (в точке)': 'Directly on line point',
+        'Возле линии (с отступом)': 'Beside line (with offset)',
+        'Отступ и сторона:': 'Offset & side:',
+        'Авто (нормаль)': 'Auto (normal)',
+        'Порядок отображения:': 'Display order:',
+        'Стиль значков:': 'Badge style:',
+        'Окантовка номеров:': 'Badges border:',
+        'Без окантовки': 'No border',
+        'Чёрная окантовка': 'Black border',
+        'Свой цвет...': 'Custom color...',
+        'Цвет окантовки:': 'Border color:',
+        'Размер бейджей (px):': 'Badge size (px):',
+        'Фон конечной:': 'Terminal background:',
+        'Отсутствует': 'None',
+        'Немного темнее фона': 'Slightly darker than canvas',
+        'Контрастная плашка': 'Contrast plate',
+        'Цвет фона:': 'Background color:',
+        'Если на конце есть остановка:': 'If a station is at the end:',
+        'Только бейджи': 'Badges only',
+        'Бейджи + засечка остановки': 'Badges + station tick',
+        'Не создавать терминал': 'Do not create terminal',
+        'Заменить остановку терминалом': 'Replace station with terminal',
+
+        // Пересадки, пучки, местность, легенда, глобальные
+        'Станция А:': 'Station A:',
+        'Станция Б:': 'Station B:',
+        '+ Связать выбранные станции': '+ Link selected stations',
+        'Сортировка в пучке:': 'Bundle sorting:',
+        'По номеру маршрута (1, 2, 5...)': 'By route number (1, 2, 5...)',
+        'По алфавиту названий': 'Alphabetically by name',
+        'По спектру цвета': 'By color spectrum',
+        'По количеству остановок': 'By station count',
+        'Межпутевой зазор (px):': 'Track gap (px):',
+        '⚡ Сформировать пучки автоматически': '⚡ Auto-form bundles',
+        'Синхронизация траекторий пучка:': 'Bundle trajectory sync:',
+        'Плотность разбиения (1–10 точек):': 'Subdivision density (1–10 pts):',
+        '⚡ Синхронизировать траектории пучка (1–10 точек)': '⚡ Sync bundle trajectories (1–10 pts)',
+        'Ручной выбор линий в пучок:': 'Manual line selection for bundle:',
+        'Сгруппировать выбранные линии': 'Group selected lines',
+        'ЖД со шпалами, белое шоссе': 'Railways with ties, white highways',
+        '+ Добавить': '+ Add',
+        'Режим кисти:': 'Brush mode:',
+        'Круглая кисть': 'Round brush',
+        'Карандаш': 'Pencil (1 cell)',
+        'Заливка области': 'Bucket fill',
+        'Ластик': 'Eraser',
+        'Радиус кисти:': 'Brush radius:',
+        'Вода': 'Water',
+        'Парк': 'Park',
+        'Земля': 'Land',
+        'Мелководье': 'Shallow water',
+        'Цвет заливки:': 'Fill color:',
+        'Слои местности:': 'Terrain layers:',
+        '+ Создать слой': '+ Create layer',
+        '+ Надпись местности': '+ Terrain label',
+        '📍 + Объект': '📍 + Object',
+        '📝 + Текст': '📝 + Text',
+        '🖼️ Загрузить свою иконку / картинку на карту...': '🖼️ Upload custom icon / image to map...',
+        'Список объектов и надписей:': 'Objects & text labels list:',
+        'Отображать легенду:': 'Show legend:',
+        'Быстрый выбор шаблона оформления:': 'Quick style template:',
+        'Муроморск': 'Muromorsk',
+        'Магистраль': 'Magistral',
+        'Табличный': 'Tabular',
+        'Колонок в списке:': 'Columns:',
+        '1 колонка': '1 column',
+        '2 колонки': '2 columns',
+        '3 колонки': '3 columns',
+        'Эмблема/логотип:': 'Emblem / logo:',
+        'Эмодзи / Символ': 'Emoji / Symbol',
+        'Своя картинка (файл)': 'Custom image (file)',
+        'Без эмблемы': 'No emblem',
+        'Символ/иконка:': 'Symbol / icon:',
+        'Картинка логотипа:': 'Logo image:',
+        'Заголовок:': 'Title:',
+        'Цвет подзаголовка:': 'Subtitle color:',
+        'Поворот (0–360°):': 'Rotation (0–360°):',
+        'Шрифт заголовка (px):': 'Title font size (px):',
+        'Шрифт маршрутов (px):': 'Routes font size (px):',
+        'Авто-подгонка высоты:': 'Auto-fit height:',
+        'Ширина карточки (px):': 'Card width (px):',
+        'Порядок и подписи маршрутов в легенде:': 'Routes order & sublabels in legend:',
+        'Дополнительная информация:': 'Additional info notes:',
+        '+ Добавить пункт инфо': '+ Add info item',
+        'Шрифт всей схемы:': 'Global scheme font:',
+        'Тень элементов:': 'Elements drop shadow:',
+        'Отключить все тени (по умолчанию)': 'Disable all shadows (default)',
+        'Для всех элементов (линии и декор)': 'All elements (lines & decor)',
+        'Только для линий ОТ': 'Transit lines only',
+        'Только для декораций': 'Decorations only',
+        'Базовая толщина путей:': 'Base track width:',
+        'Синхр. размер шрифта с линией:': 'Sync font size with line width:',
+        'Скругление углов:': 'Corner rounding:',
+        'Скругление: Вкл': 'Rounding: On',
+        'Скругление: Выкл': 'Rounding: Off',
+        'Радиус поворотов:': 'Corner radius:',
+        'Глобальный угол подписей:': 'Global label angle:',
+        'Положение подписей по умолчанию:': 'Default label position:',
+        'Обновлять существующие станции:': 'Update existing stations:',
+        'Исключить изменённые вручную:': 'Exclude manually edited:',
+        '🔒 Защищены (Вкл)': '🔒 Protected (On)',
+        '🔓 Все станции (Выкл)': '🔓 All stations (Off)',
+        'Цвет вторичных подписей:': 'Secondary labels color:',
+        '🌐 Авто-перевод всех названий': '🌐 Auto-translate all names',
+        'Подложка холста:': 'Canvas background image:',
+        'Файл картинки:': 'Image file:',
+        'Прозрачность картинки:': 'Image opacity:',
+        'Удалить подложку': 'Remove background image',
+        'Цвет холста:': 'Canvas color:',
+        'Прозрачность холста:': 'Canvas opacity:',
+        '🎯 Обновить только выбранный элемент': '🎯 Update selected element only',
+        '🔓 Сбросить защиту ручных правок станций': '🔓 Reset manual stations protection',
+
+        // Отладка и динамические сообщения
+        '🐞 Консоль отладки и логов': '🐞 Debug & Logs Console',
+        '🧪 Тест DOM': '🧪 DOM Test',
+        '🔍 Дамп STATE': '🔍 Dump STATE',
+        '⚡ Тест рендера': '⚡ Render Test',
+        '💥 Ошибка': '💥 Trigger Error',
+        'Копировать': 'Copy',
+        'Очистить': 'Clear',
+        '✖ Скрыть': '✖ Hide',
+        'Объектов и надписей пока нет': 'No objects or text labels yet',
+        'Конечных пока нет': 'No terminals yet',
+        'Пересадок пока нет': 'No transfers yet',
+        'Без названия': 'Unnamed',
+        'Доп. инфо / интервал': 'Extra info / interval',
+        'Подветок пока нет (нажмите «+ Подветка» или начните рисовать от середины линии)': 'No branches yet (click "+ Branch" or start drawing from mid-line)',
+        'Ручных стрелок нет (нажмите «➕ Добавить по клику» и кликните по линии)': 'No manual arrows (click "➕ Add by click" and click on the line)',
+        'Нет': 'None',
+        '→ Прямо': '→ Forward',
+        '← Обратно': '← Backward',
+        '↔ Обе': '↔ Both'
+      }
+    },
+
+    registerLocale(langCode, dictionary) {
+      if (!this.locales[langCode]) this.locales[langCode] = {};
+      Object.assign(this.locales[langCode], dictionary);
+    },
+
+    t(key, params = {}) {
+      if (!key) return '';
+      const activeDict = this.locales[this.currentLang] || {};
+      const fallbackDict = this.locales[this.fallbackLang] || {};
+      const baseDict = this.locales['ru'] || {};
+
+      let str;
+      if (this.currentLang === 'ru') {
+        str = baseDict[key] !== undefined ? baseDict[key] : key;
+      } else {
+        str = activeDict[key];
+        if (str === undefined || str === '') str = fallbackDict[key]; // Замещение английским!
+        if (str === undefined || str === '') str = baseDict[key] !== undefined ? baseDict[key] : key;
+      }
+
+      return String(str).replace(/\{(\w+)\}/g, (_, k) => (params[k] !== undefined ? params[k] : `{${k}}`));
+    },
+
+    // Автоматическое сканирование и перевод всех текстовых узлов и атрибутов DOM
+    applyToDOM() {
+      document.documentElement.lang = this.currentLang;
+      document.title = this.t('MURScheme — Редактор транспортных схем MURS');
+
+      // 1. Элементы с явным data-i18n
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        el.textContent = this.t(el.getAttribute('data-i18n'));
+      });
+      document.querySelectorAll('[data-i18n-tooltip]').forEach(el => {
+        el.setAttribute('data-tooltip', this.t(el.getAttribute('data-i18n-tooltip')));
+      });
+
+      // 2. Автоматический перевод атрибутов placeholder, title, data-tooltip
+      document.querySelectorAll('[placeholder], [title], [data-tooltip]').forEach(el => {
+        if (el.hasAttribute('placeholder')) {
+          if (!el.dataset.origPlaceholder) el.dataset.origPlaceholder = el.getAttribute('placeholder');
+          el.setAttribute('placeholder', this.t(el.dataset.origPlaceholder));
+        }
+        if (el.hasAttribute('title')) {
+          if (!el.dataset.origTitle) el.dataset.origTitle = el.getAttribute('title');
+          el.setAttribute('title', this.t(el.dataset.origTitle));
+        }
+        if (el.hasAttribute('data-tooltip') && !el.hasAttribute('data-i18n-tooltip')) {
+          if (!el.dataset.origTooltip) el.dataset.origTooltip = el.getAttribute('data-tooltip');
+          el.setAttribute('data-tooltip', this.t(el.dataset.origTooltip));
+        }
+      });
+
+      // 3. Автоматический перевод всех текстовых узлов интерфейса (не ломая вложенные иконки и инпуты)
+      const roots = [
+        document.querySelector('header'),
+        document.querySelector('.sidebar-right'),
+        document.querySelector('.status-bar'),
+        document.getElementById('btn-floating-debug'),
+        document.getElementById('debug-console-drawer')
+      ].filter(Boolean);
+
+      roots.forEach(root => {
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+        let node;
+        while ((node = walker.nextNode())) {
+          const parent = node.parentElement;
+          if (!parent || parent.tagName === 'SCRIPT' || parent.tagName === 'STYLE' || parent.classList.contains('debug-log-body')) continue;
+          const trimmed = node.nodeValue.trim();
+          if (!trimmed) continue;
+
+          if (!node._origRu) node._origRu = trimmed;
+          const translated = this.t(node._origRu);
+          if (translated && translated !== trimmed) {
+            node.nodeValue = node.nodeValue.replace(trimmed, translated);
+          } else if (this.currentLang === 'ru' && node._origRu !== trimmed) {
+            node.nodeValue = node.nodeValue.replace(trimmed, node._origRu);
+          }
+        }
+      });
+    },
+
+    setLanguage(langCode) {
+      if (!this.locales[langCode]) this.locales[langCode] = {};
+      this.currentLang = langCode;
+      localStorage.setItem('murscheme_lang', langCode);
+      const sel = document.getElementById('ui-lang-select');
+      if (sel && sel.value !== langCode) sel.value = langCode;
+      this.applyToDOM();
+      if (typeof refreshCanvas === 'function') {
+        refreshCanvas();
+        this.applyToDOM(); // Переводим свежеотрисованные списки в сайдбаре
+      }
+    }
+  };
+
+  const t = (key, params) => I18N.t(key, params);
+
     /* =========================================================================
        МОДУЛЬ 1: ОТЛАДКА И ЛОГИРОВАНИЕ (DBG)
        ========================================================================= */
@@ -4751,6 +5329,30 @@
       };
     }
 
+    // Возвращает основную и вторичную подпись элемента карты с учётом выбранного языка и fallback на английский
+    function getMapElementLabels(obj, mainField = 'name', subField = 'subname') {
+      const rawMain = (obj && obj[mainField]) ? String(obj[mainField]).trim() : '';
+      const rawEn = (obj && obj.i18n && obj.i18n.en)
+        ? String(obj.i18n.en).trim()
+        : ((obj && obj[subField]) ? String(obj[subField]).trim() : '');
+
+      const lang = I18N.currentLang || 'ru';
+      const customTrans = (obj && obj.i18n && obj.i18n[lang]) ? String(obj.i18n[lang]).trim() : '';
+
+      // Если включён английский или другой иностранный язык:
+      // 1. Берём перевод из i18n[lang]
+      // 2. При отсутствии — замещаем английским (rawEn / subname)
+      // 3. Если нет даже английского — оставляем оригинал (rawMain)
+      if (lang !== 'ru') {
+        const primary = customTrans || rawEn || rawMain;
+        const secondary = (customTrans && rawEn && customTrans !== rawEn) ? rawEn : '';
+        return { primary, secondary };
+      }
+
+      // На русском языке показываем основное название + английский subname снизу
+      return { primary: rawMain, secondary: rawEn };
+    }
+
     function renderStationLabel(st, geo, termBadgesWidth = 0, visualOuterRadius = 10) {
       const {
         projX, projY, posX, posY,
@@ -4758,6 +5360,9 @@
         nearEdge, associatedLines, effectiveLabelPos,
         capW, capH
       } = geo;
+
+      const { primary: stMainText, secondary: stSubText } = getMapElementLabels(st, 'name', 'subname');
+      const hasSub = Boolean(stSubText);
 
       const baseW = maxStrokeW || strokeW || 6.5;
       const style = st.style || 'metro-tick';
@@ -4777,7 +5382,6 @@
         ? Math.max(8, Math.round(baseFontSize * (baseW / 6.5)))
         : baseFontSize;
       const subFontSize = Math.max(7, Math.round(fontSize * 0.72));
-      const hasSub = Boolean(st.subname && st.subname.trim());
 
       const angle = (st.labelAngle !== undefined) ? st.labelAngle : (STATE.globalStyles.labelAngle || 0);
       const rad = angle * (Math.PI / 180);
@@ -4883,7 +5487,6 @@
         }
 
         if (isAtTerm) {
-          // Учитываем габариты наклонного текстового блока, чтобы он не заезжал на плашку терминала
           const yTop = mainDy - fontSize * 0.85;
           const yBot = hasSub ? (subDy + subFontSize * 0.2) : (mainDy + fontSize * 0.2);
           const dxTop = -yTop * sinA;
@@ -4923,7 +5526,7 @@
       text.setAttribute('font-size', String(fontSize));
       text.setAttribute('text-anchor', anchor);
       text.setAttribute('y', String(mainDy));
-      text.textContent = st.name;
+      text.textContent = stMainText;
       labelGroup.appendChild(text);
 
       if (hasSub) {
@@ -4933,7 +5536,7 @@
         sub.setAttribute('font-size', String(subFontSize));
         sub.setAttribute('text-anchor', anchor);
         sub.setAttribute('y', String(subDy));
-        sub.textContent = st.subname.trim();
+        sub.textContent = stSubText;
         labelGroup.appendChild(sub);
       }
 
@@ -4954,7 +5557,7 @@
 
         let nameLen = 0;
         try { nameLen = text.getComputedTextLength(); } catch (_) {}
-        if (!nameLen || isNaN(nameLen)) nameLen = (st.name || '').length * fontSize * 0.62;
+        if (!nameLen || isNaN(nameLen)) nameLen = (stMainText || '').length * fontSize * 0.62;
 
         const startX = (anchor === 'start') ? 0 : (anchor === 'middle' ? -nameLen / 2 : -nameLen);
         const endX = (anchor === 'start') ? nameLen : (anchor === 'middle' ? nameLen / 2 : 0);
@@ -5434,6 +6037,8 @@
       if (!STATE.legend.show) return;
 
       const leg = STATE.legend;
+      const legTitles = getMapElementLabels(leg, 'title', 'subtitle');
+
       const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
       g.setAttribute('class', 'map-legend-card');
       const rot = leg.angle || 0;
@@ -5452,7 +6057,7 @@
       const rowsCount = Math.ceil(STATE.lines.length / cols);
       const notesCount = (leg.notes || []).length;
 
-      const calculatedH = 60 + logoAreaH + (leg.subtitle ? 20 : 0) + rowsCount * itemH + (notesCount > 0 ? (notesCount * 22 + 20) : 0);
+      const calculatedH = 60 + logoAreaH + (legTitles.secondary ? 20 : 0) + rowsCount * itemH + (notesCount > 0 ? (notesCount * 22 + 20) : 0);
       const cardH = leg.autoHeight ? calculatedH : (Number(leg.height) || calculatedH);
 
       const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
@@ -5466,15 +6071,16 @@
       const t1 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
       t1.setAttribute('x', '20'); t1.setAttribute('y', String(curY));
       t1.setAttribute('font-size', String(titleFs)); t1.setAttribute('font-weight', '900');
-      t1.setAttribute('fill', '#0f172a'); t1.textContent = leg.title || 'Список маршрутов';
+      t1.setAttribute('fill', '#0f172a');
+      t1.textContent = legTitles.primary || t('Список маршрутов');
       g.appendChild(t1);
 
       curY += 18;
-      if (leg.subtitle) {
+      if (legTitles.secondary) {
         const t2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         t2.setAttribute('x', '20'); t2.setAttribute('y', String(curY));
         t2.setAttribute('fill', leg.subtitleColor || '#94a3b8');
-        t2.textContent = leg.subtitle;
+        t2.textContent = legTitles.secondary;
         g.appendChild(t2);
         curY += 18;
       }
@@ -5518,18 +6124,20 @@
         badgeTxt.textContent = l.badgeText || (idx + 1);
         g.appendChild(badgeTxt);
 
+        const lineLabels = getMapElementLabels(l, 'name', 'subname');
+
         const nameTxt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         nameTxt.setAttribute('x', String(x0 + 32)); nameTxt.setAttribute('y', String(y0));
         nameTxt.setAttribute('font-size', String(fs - 0.5)); nameTxt.setAttribute('font-weight', '800');
         nameTxt.setAttribute('fill', '#1e293b');
-        nameTxt.textContent = (cols > 1 && l.name.length > 18) ? l.name.slice(0, 17) + '…' : l.name;
+        nameTxt.textContent = (cols > 1 && lineLabels.primary.length > 18) ? lineLabels.primary.slice(0, 17) + '…' : lineLabels.primary;
         g.appendChild(nameTxt);
 
-        if (l.subname) {
+        if (lineLabels.secondary) {
           const subTxt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
           subTxt.setAttribute('x', String(x0 + 32)); subTxt.setAttribute('y', String(y0 + 12));
           subTxt.setAttribute('font-size', String(fs - 2.5)); subTxt.setAttribute('fill', '#64748b');
-          subTxt.textContent = (cols > 1 && l.subname.length > 20) ? l.subname.slice(0, 19) + '…' : l.subname;
+          subTxt.textContent = (cols > 1 && lineLabels.secondary.length > 20) ? lineLabels.secondary.slice(0, 19) + '…' : lineLabels.secondary;
           g.appendChild(subTxt);
         }
       });
@@ -5564,7 +6172,6 @@
 
       legendLayer.appendChild(g);
     }
-
     function renderTempLine(hoverPoint = null) {
       if (!tempLayer) return;
       tempLayer.innerHTML = '';
@@ -5608,6 +6215,7 @@
       renderBundleLinesUI();
       renderLegendLinesReorderUI();
       renderLegendNotesUI();
+      I18N.applyToDOM();
     }
 
     /* =========================================================================
@@ -7347,6 +7955,43 @@
        МОДУЛЬ 8: ОБРАБОТЧИКИ СОБЫТИЙ И ИНИЦИАЛИЗАЦИЯ (EVENTS & INIT)
        ========================================================================= */
     function setupEventListeners() {
+      // Переключение языка из выпадающего списка
+      bind('ui-lang-select', 'change', (e) => {
+        I18N.setLanguage(e.target.value);
+      });
+
+      // Подгрузка внешнего файла перевода (.json)
+      bind('btn-load-locale', 'click', () => {
+        document.getElementById('file-input-locale')?.click();
+      });
+
+      bind('file-input-locale', 'change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          try {
+            const data = JSON.parse(evt.target.result);
+            // Формат файла: { "lang": "de", "name": "Deutsch", "strings": { "header.grid": "Raster:" } }
+            const langCode = data.lang || file.name.replace('.json', '');
+            const dict = data.strings || data;
+
+            I18N.registerLocale(langCode, dict);
+
+            const sel = document.getElementById('ui-lang-select');
+            if (sel && !sel.querySelector(`option[value="${langCode}"]`)) {
+              sel.add(new Option(data.name || langCode.toUpperCase(), langCode));
+            }
+            if (sel) sel.value = langCode;
+            I18N.setLanguage(langCode);
+            DBG.log(`[I18N] Загружен языковой пакет: ${langCode} (пустые ключи замещаются EN)`, 'success');
+          } catch (err) {
+            DBG.log(`[I18N] Ошибка чтения JSON перевода: ${err.message}`, 'err');
+          }
+        };
+        reader.readAsText(file);
+      });
+
       bind('btn-acc-expand-all', 'click', () => {
         document.querySelectorAll('.accordion-section').forEach(s => s.classList.remove('collapsed'));
       });
@@ -9245,6 +9890,7 @@
         syncLegendFormUI();
         refreshCanvas();
         setupEventListeners();
+        I18N.setLanguage(I18N.currentLang);
         initDynamicAccordions();
         if (STATE.selectedStationId) {
           selectStation(STATE.selectedStationId);
