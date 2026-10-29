@@ -8,15 +8,18 @@
     "acc-sec-selected",
     "acc-sec-globals"
   ],
-  "zoom": 1.3287677487778975,
-  "panX": 1295.1597724092335,
-  "panY": 502.7994318753925,
+  "zoom": 1.0917388399745345,
+  "panX": 1146.7362693293787,
+  "panY": 403.93861079285966,
   "activeLineId": null,
   "activeDecorId": null,
   "selectedStationId": null,
   "selectedTransferId": null,
   "selectedTerrainLabelId": null,
   "selectedTerminalId": null,
+  "arrowFirstNode": null,
+  "badgeFirstNode": null,
+  "isReadOnly": false,
   "globalStyles": {
     "fontFamily": "'Manrope', sans-serif",
     "labelAngle": 315,
@@ -55,8 +58,8 @@
   },
   "legend": {
     "show": true,
-    "x": 889,
-    "y": -347,
+    "x": 897,
+    "y": -334,
     "title": "Трамвайные маршруты",
     "subtitle": "Tram routes",
     "template": "table",
@@ -154,7 +157,8 @@
           "x": 1152,
           "y": 240
         }
-      ]
+      ],
+      "arrowSegments": {}
     },
     {
       "id": "line-1791737881316",
@@ -196,7 +200,12 @@
           "x": 696,
           "y": 480
         }
-      ]
+      ],
+      "arrowSegments": {},
+      "showBadgesAlong": true,
+      "badgesSide": "normal-left",
+      "badgesInterval": 150,
+      "badgesColorMode": "line"
     },
     {
       "id": "line-1791737894205",
@@ -226,7 +235,17 @@
           "x": -336,
           "y": 552
         }
-      ]
+      ],
+      "arrowSegments": {
+        "0:0": "both",
+        "0:1": "both",
+        "0:2": "both"
+      },
+      "badgeSegments": {},
+      "arrows": "both",
+      "arrowWidth": 15.5,
+      "arrowHeight": 13.5,
+      "arrowInterval": 195
     },
     {
       "id": "line-1791925108817",
@@ -236,7 +255,7 @@
       "width": 6.5,
       "opacity": 1,
       "shadow": false,
-      "offset": 1,
+      "offset": 1.2,
       "dashStyle": "solid",
       "badgeText": "5",
       "points": [
@@ -260,7 +279,8 @@
           "x": 840,
           "y": 384
         }
-      ]
+      ],
+      "arrowSegments": {}
     }
   ],
   "stations": [
@@ -686,7 +706,7 @@
       "name": "Остановка 27",
       "x": 720,
       "y": 240,
-      "style": "metro-tick",
+      "style": "capsule-vertical-transparent",
       "colorMode": "stripes",
       "tickShift": "auto",
       "customColor": "#ffffff",
@@ -703,7 +723,8 @@
       ],
       "badgePos": "right",
       "showBadges": true,
-      "subname": "Stop 27"
+      "subname": "Stop 27",
+      "manualCustomized": true
     },
     {
       "id": "st-1791738224755",
@@ -1110,7 +1131,7 @@
       ],
       "align": "vertical",
       "badgeStyle": "default",
-      "isAuto": false
+      "isAuto": true
     },
     {
       "id": "term-auto-1792791617322-ia4x",
@@ -1159,8 +1180,10 @@
         "line-1791737881316"
       ],
       "align": "vertical",
-      "badgeStyle": "default",
-      "isAuto": true
+      "badgeStyle": "loop",
+      "isAuto": true,
+      "badgeSize": 11,
+      "bgMode": "none"
     },
     {
       "id": "term-auto-1792791617322-36dy",
@@ -1171,8 +1194,9 @@
         "line-1791737881316"
       ],
       "align": "vertical",
-      "badgeStyle": "default",
-      "isAuto": true
+      "badgeStyle": "loop",
+      "isAuto": true,
+      "bgMode": "none"
     },
     {
       "id": "term-auto-1792791617322-1ugi",
@@ -2074,16 +2098,16 @@
   ],
   "usedPalette": [],
   "isPanning": false,
-  "startPanX": 805.8402275907665,
-  "startPanY": 191.2005681246075,
+  "startPanX": 1153.2637306706213,
+  "startPanY": 588.0613892071403,
   "draggingVertex": null,
   "draggingStation": null,
   "draggingTerminal": null,
   "draggingLegend": false,
   "draggingTerrainLabel": null,
   "legendDragOffset": {
-    "x": 182.8060542086232,
-    "y": 234.3197944820087
+    "x": 182.12381658532877,
+    "y": 129.1029637384815
   },
   "tempPoints": [],
   "transferSelection": [],
