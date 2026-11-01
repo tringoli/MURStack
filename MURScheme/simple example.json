@@ -5,17 +5,36 @@
   "syncFontSize": true,
   "currentTool": "select",
   "pinnedSections": [
-    "acc-sec-selected",
-    "acc-sec-globals"
+    "acc-sec-selected"
   ],
   "zoom": 1.0917388399745345,
-  "panX": 1146.7362693293787,
-  "panY": 403.93861079285966,
+  "panX": 886.8943223383764,
+  "panY": 397.7407888132001,
+  "mapInfo": {
+    "title": "Example map with a bunch of features",
+    "attribution": "Tringoli // MURScheme",
+    "showTitle": true,
+    "showAttribution": true,
+    "titleSize": 16,
+    "attributionSize": 11
+  },
+  "canvasFrame": {
+    "enabled": false,
+    "x": 0,
+    "y": 0,
+    "width": 1920,
+    "height": 1080
+  },
+  "multiSelection": [],
+  "marqueeBox": null,
+  "lodLevel": 3,
+  "apiListeners": [],
   "activeLineId": null,
   "activeDecorId": null,
   "selectedStationId": null,
   "selectedTransferId": null,
   "selectedTerrainLabelId": null,
+  "selectedTariffZoneId": null,
   "selectedTerminalId": null,
   "arrowFirstNode": null,
   "badgeFirstNode": null,
@@ -35,7 +54,11 @@
     "excludeManualStations": true,
     "curveRadius": 43,
     "canvasOpacity": 100,
-    "syncFontSize": true
+    "syncFontSize": true,
+    "substrateX": -1000,
+    "substrateY": -1000,
+    "substrateWidth": 4000,
+    "substrateHeight": 3000
   },
   "terminalsSettings": {
     "autoGenerate": true,
@@ -88,7 +111,8 @@
         "icon": "",
         "text": "Пересадка на станции метро Муроморска"
       }
-    ]
+    ],
+    "autoWidth": false
   },
   "lines": [
     {
@@ -158,7 +182,8 @@
           "y": 240
         }
       ],
-      "arrowSegments": {}
+      "arrowSegments": {},
+      "badgeSegments": {}
     },
     {
       "id": "line-1791737881316",
@@ -280,7 +305,8 @@
           "y": 384
         }
       ],
-      "arrowSegments": {}
+      "arrowSegments": {},
+      "badgeSegments": {}
     }
   ],
   "stations": [
@@ -1122,36 +1148,12 @@
   ],
   "terminals": [
     {
-      "id": "term-auto-1792791617321-aee4",
-      "name": "",
-      "x": 288,
-      "y": 744,
-      "lineIds": [
-        "line-1791737855264"
-      ],
-      "align": "vertical",
-      "badgeStyle": "default",
-      "isAuto": true
-    },
-    {
       "id": "term-auto-1792791617322-ia4x",
       "name": "",
       "x": 672,
       "y": -288,
       "lineIds": [
         "line-1791737855264"
-      ],
-      "align": "vertical",
-      "badgeStyle": "default",
-      "isAuto": true
-    },
-    {
-      "id": "term-auto-1792791617322-cmsv",
-      "name": "",
-      "x": -696,
-      "y": -144,
-      "lineIds": [
-        "line-1791737874304"
       ],
       "align": "vertical",
       "badgeStyle": "default",
@@ -1170,20 +1172,6 @@
       "align": "vertical",
       "badgeStyle": "default",
       "isAuto": true
-    },
-    {
-      "id": "term-auto-1792791617322-6wnv",
-      "name": "",
-      "x": -72,
-      "y": -192,
-      "lineIds": [
-        "line-1791737881316"
-      ],
-      "align": "vertical",
-      "badgeStyle": "loop",
-      "isAuto": true,
-      "badgeSize": 11,
-      "bgMode": "none"
     },
     {
       "id": "term-auto-1792791617322-36dy",
@@ -1217,6 +1205,42 @@
       "y": 384,
       "lineIds": [
         "line-1791925108817"
+      ],
+      "align": "vertical",
+      "badgeStyle": "default",
+      "isAuto": true
+    },
+    {
+      "id": "term-auto-1793539549690-0o5g",
+      "name": "",
+      "x": 288,
+      "y": 744,
+      "lineIds": [
+        "line-1791737855264"
+      ],
+      "align": "vertical",
+      "badgeStyle": "default",
+      "isAuto": true
+    },
+    {
+      "id": "term-auto-1793539549690-sr91",
+      "name": "",
+      "x": -696,
+      "y": -144,
+      "lineIds": [
+        "line-1791737874304"
+      ],
+      "align": "vertical",
+      "badgeStyle": "default",
+      "isAuto": true
+    },
+    {
+      "id": "term-auto-1793539549690-g9hw",
+      "name": "",
+      "x": -72,
+      "y": -192,
+      "lineIds": [
+        "line-1791737881316"
       ],
       "align": "vertical",
       "badgeStyle": "default",
@@ -2062,6 +2086,7 @@
       }
     }
   ],
+  "tariffZones": [],
   "activeLayerId": "tlayer-ground",
   "paintMode": "brush",
   "brushRadius": 2,
@@ -2098,13 +2123,14 @@
   ],
   "usedPalette": [],
   "isPanning": false,
-  "startPanX": 1153.2637306706213,
-  "startPanY": 588.0613892071403,
+  "startPanX": 888.1056776616236,
+  "startPanY": 675.2592111867999,
   "draggingVertex": null,
   "draggingStation": null,
   "draggingTerminal": null,
   "draggingLegend": false,
   "draggingTerrainLabel": null,
+  "draggingSubstrate": null,
   "legendDragOffset": {
     "x": 182.12381658532877,
     "y": 129.1029637384815
@@ -2113,6 +2139,10 @@
   "transferSelection": [],
   "forceNewBranch": false,
   "deletedAutoKeys": [],
+  "_dragGroupAnchor": null,
+  "_dragGroupOffsets": null,
+  "draggingLineStations": null,
+  "draggingLineAnchor": null,
   "palette": [
     "#ED1B24",
     "#0078BF",
