@@ -7,9 +7,9 @@
   "pinnedSections": [
     "acc-sec-selected"
   ],
-  "zoom": 1.0917388399745345,
-  "panX": 886.8943223383764,
-  "panY": 397.7407888132001,
+  "zoom": 1.4729109526831203,
+  "panX": 109.9242506936107,
+  "panY": 291.23174383386186,
   "mapInfo": {
     "title": "Example map with a bunch of features",
     "attribution": "Tringoli // MURScheme",
@@ -27,7 +27,7 @@
   },
   "multiSelection": [],
   "marqueeBox": null,
-  "lodLevel": 3,
+  "lodLevel": 4,
   "apiListeners": [],
   "activeLineId": null,
   "activeDecorId": null,
@@ -58,7 +58,14 @@
     "substrateX": -1000,
     "substrateY": -1000,
     "substrateWidth": 4000,
-    "substrateHeight": 3000
+    "substrateHeight": 3000,
+    "autoTextContrast": true,
+    "textContrastCustom": false,
+    "textContrastColor": "#0f172a",
+    "autoOutlineLabels": true,
+    "autoOutlineIntersectionOnly": false,
+    "autoOutlineColor": "#ffffff",
+    "autoOutlineWidth": 1.5
   },
   "terminalsSettings": {
     "autoGenerate": true,
@@ -133,6 +140,10 @@
         },
         {
           "x": 288,
+          "y": 312
+        },
+        {
+          "x": 288,
           "y": 240
         },
         {
@@ -147,7 +158,11 @@
           "x": 672,
           "y": -288
         }
-      ]
+      ],
+      "segmentOffsets": {},
+      "segmentBundleSpan": {},
+      "arrowSegments": {},
+      "badgeSegments": {}
     },
     {
       "id": "line-1791737874304",
@@ -157,7 +172,7 @@
       "width": 6.5,
       "opacity": 1,
       "shadow": false,
-      "offset": 0,
+      "offset": -1,
       "dashStyle": "solid",
       "badgeText": "2",
       "points": [
@@ -166,16 +181,24 @@
           "y": -144
         },
         {
-          "x": -581,
-          "y": -29
+          "x": -576,
+          "y": -24
         },
         {
-          "x": -221,
-          "y": -29
+          "x": -216,
+          "y": -24
         },
         {
-          "x": 51,
-          "y": 243
+          "x": 48,
+          "y": 240
+        },
+        {
+          "x": 288,
+          "y": 240
+        },
+        {
+          "x": 672,
+          "y": 240
         },
         {
           "x": 1152,
@@ -183,7 +206,9 @@
         }
       ],
       "arrowSegments": {},
-      "badgeSegments": {}
+      "badgeSegments": {},
+      "segmentOffsets": {},
+      "segmentBundleSpan": {}
     },
     {
       "id": "line-1791737881316",
@@ -230,7 +255,10 @@
       "showBadgesAlong": true,
       "badgesSide": "normal-left",
       "badgesInterval": 150,
-      "badgesColorMode": "line"
+      "badgesColorMode": "line",
+      "segmentOffsets": {},
+      "segmentBundleSpan": {},
+      "badgeSegments": {}
     },
     {
       "id": "line-1791737894205",
@@ -240,12 +268,20 @@
       "width": 6.5,
       "opacity": 1,
       "shadow": false,
-      "offset": 0.5,
+      "offset": 0,
       "dashStyle": "rail-ties",
       "badgeText": "4",
       "points": [
         {
           "x": 1152,
+          "y": 240
+        },
+        {
+          "x": 672,
+          "y": 240
+        },
+        {
+          "x": 288,
           "y": 240
         },
         {
@@ -263,14 +299,21 @@
       ],
       "arrowSegments": {
         "0:0": "both",
-        "0:1": "both",
-        "0:2": "both"
+        "0:1": "none",
+        "0:2": "both",
+        "0:3": "both",
+        "0:4": "both"
       },
       "badgeSegments": {},
-      "arrows": "both",
-      "arrowWidth": 15.5,
-      "arrowHeight": 13.5,
-      "arrowInterval": 195
+      "arrows": "forward",
+      "arrowWidth": 7.5,
+      "arrowHeight": 12,
+      "arrowInterval": 195,
+      "segmentOffsets": {},
+      "segmentBundleSpan": {},
+      "showBadgesAlong": false,
+      "arrowStyle": "stealth",
+      "arrowSide": "center"
     },
     {
       "id": "line-1791925108817",
@@ -280,7 +323,7 @@
       "width": 6.5,
       "opacity": 1,
       "shadow": false,
-      "offset": 1.2,
+      "offset": -1,
       "dashStyle": "solid",
       "badgeText": "5",
       "points": [
@@ -306,7 +349,9 @@
         }
       ],
       "arrowSegments": {},
-      "badgeSegments": {}
+      "badgeSegments": {},
+      "segmentOffsets": {},
+      "segmentBundleSpan": {}
     }
   ],
   "stations": [
@@ -327,8 +372,8 @@
       "termAlign": "beside",
       "lineIds": [
         "line-1791737855264",
-        "line-1791737894205",
-        "line-1791737874304"
+        "line-1791737874304",
+        "line-1791737894205"
       ],
       "subname": "Kishburg",
       "manualCustomized": true
@@ -342,7 +387,7 @@
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "bottom-left",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -353,7 +398,9 @@
         "line-1791737881316"
       ],
       "manualCustomized": true,
-      "subname": "Savvateevo"
+      "subname": "Savvateevo",
+      "showBadges": false,
+      "isManual": true
     },
     {
       "id": "st-1791737939070",
@@ -364,19 +411,20 @@
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "top",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
       "termPrefix": "ДС «",
       "termAlign": "beside",
       "lineIds": [
-        "line-1791737894205",
         "line-1791737874304",
+        "line-1791737894205",
         "line-1791737881316"
       ],
       "subname": "Okskaya",
-      "manualCustomized": true
+      "manualCustomized": true,
+      "isManual": true
     },
     {
       "id": "st-1791738142708",
@@ -387,7 +435,7 @@
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "right",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -408,7 +456,7 @@
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "top",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -417,7 +465,10 @@
       "lineIds": [
         "line-1791737881316"
       ],
-      "subname": "Stop 5"
+      "subname": "Stop 5",
+      "i18n": {
+        "en": "Stop 5"
+      }
     },
     {
       "id": "st-1791738145915",
@@ -428,7 +479,7 @@
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "top",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -464,12 +515,12 @@
       "id": "st-1791738154404",
       "name": "Кривичи",
       "x": 672,
-      "y": -288,
+      "y": -312,
       "style": "metro-tick",
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top",
+      "labelPos": "bottom-left",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -484,13 +535,13 @@
     {
       "id": "st-1791738156700",
       "name": "Остановка 13",
-      "x": -24,
-      "y": 168,
+      "x": 0,
+      "y": 192,
       "style": "interchange-borderless",
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "bottom-left",
+      "labelPos": "top",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -505,13 +556,13 @@
     {
       "id": "st-1791738157314",
       "name": "Остановка 14",
-      "x": -96,
+      "x": -72,
       "y": 120,
       "style": "metro-tick",
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "bottom",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -520,7 +571,8 @@
       "lineIds": [
         "line-1791737874304"
       ],
-      "subname": "Stop 14"
+      "subname": "Stop 14",
+      "manualCustomized": true
     },
     {
       "id": "st-1791738158542",
@@ -531,7 +583,7 @@
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "top",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -551,7 +603,7 @@
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "top",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -571,7 +623,7 @@
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "top",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -591,7 +643,7 @@
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "top",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -632,7 +684,7 @@
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "bottom",
+      "labelPos": "top",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -662,7 +714,8 @@
       "lineIds": [
         "line-1791737894205"
       ],
-      "subname": "Stop 22"
+      "subname": "Stop 22",
+      "manualCustomized": true
     },
     {
       "id": "st-1791738167099",
@@ -682,7 +735,8 @@
       "lineIds": [
         "line-1791737894205"
       ],
-      "subname": "Stop 24"
+      "subname": "Stop 24",
+      "manualCustomized": true
     },
     {
       "id": "st-1791738168133",
@@ -693,7 +747,7 @@
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "top-left",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -714,18 +768,19 @@
       "colorMode": "stripes",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "top",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
       "termPrefix": "ДС «",
       "termAlign": "beside",
       "lineIds": [
-        "line-1791737894205",
-        "line-1791737874304"
+        "line-1791737874304",
+        "line-1791737894205"
       ],
       "subname": "Stop 26",
-      "manualCustomized": true
+      "manualCustomized": true,
+      "isManual": true
     },
     {
       "id": "st-1791738222874",
@@ -736,21 +791,22 @@
       "colorMode": "stripes",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "top",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
       "termPrefix": "ДС «",
       "termAlign": "beside",
       "lineIds": [
+        "line-1791737874304",
         "line-1791737894205",
-        "line-1791925108817",
-        "line-1791737874304"
+        "line-1791925108817"
       ],
       "badgePos": "right",
       "showBadges": true,
       "subname": "Stop 27",
-      "manualCustomized": true
+      "manualCustomized": true,
+      "badgeShape": "square"
     },
     {
       "id": "st-1791738224755",
@@ -761,18 +817,19 @@
       "colorMode": "stripes",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "top",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
       "termPrefix": "ДС «",
       "termAlign": "beside",
       "lineIds": [
+        "line-1791737874304",
         "line-1791737894205",
-        "line-1791925108817",
-        "line-1791737874304"
+        "line-1791925108817"
       ],
-      "subname": "Stop 28"
+      "subname": "Stop 28",
+      "manualCustomized": true
     },
     {
       "id": "st-1791738225772",
@@ -783,7 +840,7 @@
       "colorMode": "stripes",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top",
+      "labelPos": "bottom",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -806,7 +863,7 @@
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "bottom-left",
+      "labelPos": "bottom",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -827,7 +884,7 @@
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "bottom-left",
+      "labelPos": "bottom",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -848,7 +905,7 @@
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "top",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -868,7 +925,7 @@
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "bottom",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -883,13 +940,13 @@
     {
       "id": "st-1791738240536",
       "name": "Остановка 37",
-      "x": 288,
+      "x": 312,
       "y": 744,
       "style": "metro-tick",
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "bottom",
+      "labelPos": "top-right",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -910,7 +967,7 @@
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "top",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -919,7 +976,8 @@
       "lineIds": [
         "line-1791925108817"
       ],
-      "subname": "Stop 36"
+      "subname": "Stop 36",
+      "manualCustomized": true
     },
     {
       "id": "st-1791925210671",
@@ -939,7 +997,8 @@
       "lineIds": [
         "line-1791925108817"
       ],
-      "subname": "Stop 37"
+      "subname": "Stop 37",
+      "manualCustomized": true
     },
     {
       "id": "st-1792757335358-ixxb",
@@ -950,7 +1009,7 @@
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "right",
+      "labelPos": "bottom-left",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -970,7 +1029,7 @@
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "right",
+      "labelPos": "bottom-left",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -1004,13 +1063,13 @@
     {
       "id": "st-1792757335358-e6fd",
       "name": "1 — Ост. 5",
-      "x": 312,
+      "x": 288,
       "y": 120,
       "style": "metro-tick",
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "top",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -1024,13 +1083,13 @@
     {
       "id": "st-1792757335358-7sna",
       "name": "1 — Ост. 7",
-      "x": 458,
-      "y": -26,
+      "x": 432,
+      "y": 24,
       "style": "metro-tick",
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "right",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -1038,18 +1097,19 @@
         "line-1791737855264"
       ],
       "autoLineId": "line-1791737855264",
-      "subname": "1 - Remaining 7"
+      "subname": "1 - Remaining 7",
+      "manualCustomized": true
     },
     {
       "id": "st-1792757335358-z5k9",
       "name": "1 — Ост. 8",
-      "x": 543,
-      "y": -111,
+      "x": 504,
+      "y": -96,
       "style": "metro-tick",
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "top",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -1062,13 +1122,13 @@
     {
       "id": "st-1792757335358-0tl0",
       "name": "1 — Ост. 9",
-      "x": 627,
-      "y": -195,
+      "x": 624,
+      "y": -168,
       "style": "metro-tick",
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "right",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -1088,7 +1148,7 @@
       "colorMode": "line",
       "tickShift": "auto",
       "customColor": "#ffffff",
-      "labelPos": "top-right",
+      "labelPos": "right",
       "labelAngle": 315,
       "tickLen": 9,
       "isTerminal": false,
@@ -1144,6 +1204,31 @@
       ],
       "manualCustomized": true,
       "subname": "Stop 40"
+    },
+    {
+      "id": "st-1794066071461",
+      "name": "Станция 41",
+      "subname": "Station 41",
+      "i18n": {
+        "ru": "Станция 41",
+        "en": "Station 41"
+      },
+      "x": 1032,
+      "y": 240,
+      "style": "metro-tick",
+      "colorMode": "stripes",
+      "tickShift": "auto",
+      "customColor": "#ffffff",
+      "labelPos": "top",
+      "labelAngle": 315,
+      "showBadges": false,
+      "lineIds": [
+        "line-1791737874304",
+        "line-1791737894205",
+        "line-1791925108817"
+      ],
+      "manualCustomized": true,
+      "isManual": true
     }
   ],
   "terminals": [
@@ -1157,7 +1242,8 @@
       ],
       "align": "vertical",
       "badgeStyle": "default",
-      "isAuto": true
+      "isAuto": true,
+      "overlapMode": "badges-only"
     },
     {
       "id": "term-auto-1792791617322-q0cl",
@@ -1171,7 +1257,9 @@
       ],
       "align": "vertical",
       "badgeStyle": "default",
-      "isAuto": true
+      "isAuto": true,
+      "badgeSize": 9.5,
+      "overlapMode": "badges-only"
     },
     {
       "id": "term-auto-1792791617322-36dy",
@@ -1184,7 +1272,9 @@
       "align": "vertical",
       "badgeStyle": "loop",
       "isAuto": true,
-      "bgMode": "none"
+      "bgMode": "none",
+      "badgeSize": 9.5,
+      "offsetDist": 0
     },
     {
       "id": "term-auto-1792791617322-1ugi",
@@ -1243,8 +1333,11 @@
         "line-1791737881316"
       ],
       "align": "vertical",
-      "badgeStyle": "default",
-      "isAuto": true
+      "badgeStyle": "loop",
+      "isAuto": true,
+      "bgMode": "none",
+      "textAnchor": "auto",
+      "italic": false
     }
   ],
   "transfers": [
@@ -1303,8 +1396,8 @@
       "labelColor": "#64748b",
       "labelSize": 10,
       "repeatLabel": true,
-      "labelInterval": 620,
-      "crossingMode": "bridge",
+      "labelInterval": 500,
+      "crossingMode": "junction",
       "points": [
         {
           "x": -918,
@@ -1328,6 +1421,10 @@
         },
         {
           "x": -768,
+          "y": 72
+        },
+        {
+          "x": -600,
           "y": 72
         },
         {
@@ -1357,7 +1454,7 @@
       "labelSize": 10,
       "repeatLabel": false,
       "labelInterval": 260,
-      "crossingMode": "bridge",
+      "crossingMode": "junction",
       "points": [
         {
           "x": -936,
@@ -1366,6 +1463,10 @@
         {
           "x": -744,
           "y": -72
+        },
+        {
+          "x": -600,
+          "y": 72
         },
         {
           "x": -422,
@@ -2096,14 +2197,17 @@
       "id": "tlab-1792758322902",
       "text": "СВИЖСКИЙ ЛЕС",
       "subtext": "SVIZH FOREST",
-      "x": -648,
-      "y": 449,
+      "x": -653,
+      "y": 453,
       "angle": 315,
       "color": "#241f31",
       "size": 13,
       "spacing": 6,
       "subcolor": "#241f31",
-      "anchor": "middle"
+      "anchor": "middle",
+      "outlineWidth": 0,
+      "lineIds": [],
+      "labelPos": "center"
     },
     {
       "id": "tlab-1792759232876",
@@ -2119,12 +2223,39 @@
       "anchor": "middle",
       "italic": false,
       "bold": true
+    },
+    {
+      "id": "poi-1794068078604",
+      "isPoi": true,
+      "poiType": "material",
+      "text": "📍",
+      "imageUrl": "#mi-favorite",
+      "label": "Помогите с разработкой",
+      "sublabel": "Help with development",
+      "labelPos": "bottom",
+      "labelSize": 12,
+      "labelColor": "#0f172a",
+      "sublabelColor": "#94a3b8",
+      "x": 77,
+      "y": 337,
+      "angle": 0,
+      "color": "#ffffff",
+      "size": 47,
+      "opacity": 100,
+      "showBgPlate": true,
+      "bgColor": "#3584e4",
+      "autoContrast": false,
+      "subtext": "Помогите с разработкой",
+      "i18n": {
+        "en": "Help with development",
+        "en_sub": "Object 1"
+      }
     }
   ],
   "usedPalette": [],
   "isPanning": false,
-  "startPanX": 888.1056776616236,
-  "startPanY": 675.2592111867999,
+  "startPanX": 357.0757493063893,
+  "startPanY": 474.76825616613814,
   "draggingVertex": null,
   "draggingStation": null,
   "draggingTerminal": null,
@@ -2139,6 +2270,7 @@
   "transferSelection": [],
   "forceNewBranch": false,
   "deletedAutoKeys": [],
+  "selectedRootNodeIndices": [],
   "_dragGroupAnchor": null,
   "_dragGroupOffsets": null,
   "draggingLineStations": null,
