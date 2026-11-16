@@ -7,9 +7,9 @@
   "pinnedSections": [
     "acc-sec-selected"
   ],
-  "zoom": 1.4729109526831203,
-  "panX": 109.9242506936107,
-  "panY": 291.23174383386186,
+  "zoom": 0.9624108126462165,
+  "panX": 632.644682224327,
+  "panY": 171.18462527607062,
   "mapInfo": {
     "title": "Example map with a bunch of features",
     "attribution": "Tringoli // MURScheme",
@@ -162,7 +162,9 @@
       "segmentOffsets": {},
       "segmentBundleSpan": {},
       "arrowSegments": {},
-      "badgeSegments": {}
+      "badgeSegments": {},
+      "deletedAutoArrows": [],
+      "flippedAutoArrows": {}
     },
     {
       "id": "line-1791737874304",
@@ -172,7 +174,7 @@
       "width": 6.5,
       "opacity": 1,
       "shadow": false,
-      "offset": -1,
+      "offset": 0,
       "dashStyle": "solid",
       "badgeText": "2",
       "points": [
@@ -207,8 +209,18 @@
       ],
       "arrowSegments": {},
       "badgeSegments": {},
-      "segmentOffsets": {},
-      "segmentBundleSpan": {}
+      "segmentOffsets": {
+        "0:3": -4.5,
+        "0:4": -4.5,
+        "0:5": -9
+      },
+      "segmentBundleSpan": {
+        "0:3": 7.75,
+        "0:4": 7.75,
+        "0:5": 12.25
+      },
+      "deletedAutoArrows": [],
+      "flippedAutoArrows": {}
     },
     {
       "id": "line-1791737881316",
@@ -258,7 +270,11 @@
       "badgesColorMode": "line",
       "segmentOffsets": {},
       "segmentBundleSpan": {},
-      "badgeSegments": {}
+      "badgeSegments": {},
+      "deletedAutoArrows": [],
+      "flippedAutoArrows": {},
+      "deletedAutoBadges": [],
+      "customAutoBadgeSides": {}
     },
     {
       "id": "line-1791737894205",
@@ -309,11 +325,21 @@
       "arrowWidth": 7.5,
       "arrowHeight": 12,
       "arrowInterval": 195,
-      "segmentOffsets": {},
-      "segmentBundleSpan": {},
+      "segmentOffsets": {
+        "0:0": 0,
+        "0:1": -4.5,
+        "0:2": -4.5
+      },
+      "segmentBundleSpan": {
+        "0:0": 12.25,
+        "0:1": 7.75,
+        "0:2": 7.75
+      },
       "showBadgesAlong": false,
       "arrowStyle": "stealth",
-      "arrowSide": "center"
+      "arrowSide": "center",
+      "deletedAutoArrows": [],
+      "flippedAutoArrows": {}
     },
     {
       "id": "line-1791925108817",
@@ -323,7 +349,7 @@
       "width": 6.5,
       "opacity": 1,
       "shadow": false,
-      "offset": -1,
+      "offset": 0,
       "dashStyle": "solid",
       "badgeText": "5",
       "points": [
@@ -350,8 +376,14 @@
       ],
       "arrowSegments": {},
       "badgeSegments": {},
-      "segmentOffsets": {},
-      "segmentBundleSpan": {}
+      "segmentOffsets": {
+        "0:0": -9
+      },
+      "segmentBundleSpan": {
+        "0:0": 12.25
+      },
+      "deletedAutoArrows": [],
+      "flippedAutoArrows": {}
     }
   ],
   "stations": [
@@ -372,11 +404,14 @@
       "termAlign": "beside",
       "lineIds": [
         "line-1791737855264",
-        "line-1791737874304",
-        "line-1791737894205"
+        "line-1791737894205",
+        "line-1791737874304"
       ],
       "subname": "Kishburg",
-      "manualCustomized": true
+      "manualCustomized": true,
+      "manualLineIds": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791737937960",
@@ -400,7 +435,9 @@
       "manualCustomized": true,
       "subname": "Savvateevo",
       "showBadges": false,
-      "isManual": true
+      "isManual": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791737939070",
@@ -424,7 +461,9 @@
       ],
       "subname": "Okskaya",
       "manualCustomized": true,
-      "isManual": true
+      "isManual": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738142708",
@@ -445,7 +484,9 @@
         "line-1791737881316"
       ],
       "manualCustomized": true,
-      "subname": "Stop 4"
+      "subname": "Stop 4",
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738144145",
@@ -468,7 +509,9 @@
       "subname": "Stop 5",
       "i18n": {
         "en": "Stop 5"
-      }
+      },
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738145915",
@@ -488,7 +531,9 @@
       "lineIds": [
         "line-1791737881316"
       ],
-      "subname": "Stop 6"
+      "subname": "Stop 6",
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738147214",
@@ -509,7 +554,9 @@
         "line-1791737881316"
       ],
       "subname": "Stop 7",
-      "manualCustomized": true
+      "manualCustomized": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738154404",
@@ -530,7 +577,9 @@
         "line-1791737855264"
       ],
       "subname": "Krivichi",
-      "manualCustomized": true
+      "manualCustomized": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738156700",
@@ -551,7 +600,9 @@
         "line-1791737874304"
       ],
       "subname": "Stop 13",
-      "manualCustomized": true
+      "manualCustomized": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738157314",
@@ -572,7 +623,9 @@
         "line-1791737874304"
       ],
       "subname": "Stop 14",
-      "manualCustomized": true
+      "manualCustomized": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738158542",
@@ -592,7 +645,9 @@
       "lineIds": [
         "line-1791737874304"
       ],
-      "subname": "Stop 15"
+      "subname": "Stop 15",
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738159092",
@@ -612,7 +667,9 @@
       "lineIds": [
         "line-1791737874304"
       ],
-      "subname": "Stop 16"
+      "subname": "Stop 16",
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738159706",
@@ -632,7 +689,9 @@
       "lineIds": [
         "line-1791737874304"
       ],
-      "subname": "Stop 17"
+      "subname": "Stop 17",
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738160589",
@@ -652,7 +711,9 @@
       "lineIds": [
         "line-1791737874304"
       ],
-      "subname": "Stop 18"
+      "subname": "Stop 18",
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738161638",
@@ -673,7 +734,9 @@
         "line-1791737874304"
       ],
       "subname": "Stop 19",
-      "manualCustomized": true
+      "manualCustomized": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738164185",
@@ -694,7 +757,9 @@
         "line-1791737894205"
       ],
       "subname": "Stop 20",
-      "manualCustomized": true
+      "manualCustomized": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738165559",
@@ -715,7 +780,9 @@
         "line-1791737894205"
       ],
       "subname": "Stop 22",
-      "manualCustomized": true
+      "manualCustomized": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738167099",
@@ -736,7 +803,9 @@
         "line-1791737894205"
       ],
       "subname": "Stop 24",
-      "manualCustomized": true
+      "manualCustomized": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738168133",
@@ -757,7 +826,9 @@
         "line-1791737894205"
       ],
       "subname": "Stop 25",
-      "manualCustomized": true
+      "manualCustomized": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738222268",
@@ -780,7 +851,10 @@
       ],
       "subname": "Stop 26",
       "manualCustomized": true,
-      "isManual": true
+      "isManual": true,
+      "manualLineIds": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738222874",
@@ -798,15 +872,18 @@
       "termPrefix": "ДС «",
       "termAlign": "beside",
       "lineIds": [
-        "line-1791737874304",
+        "line-1791925108817",
         "line-1791737894205",
-        "line-1791925108817"
+        "line-1791737874304"
       ],
       "badgePos": "right",
       "showBadges": true,
       "subname": "Stop 27",
       "manualCustomized": true,
-      "badgeShape": "square"
+      "badgeShape": "square",
+      "manualLineIds": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738224755",
@@ -829,7 +906,9 @@
         "line-1791925108817"
       ],
       "subname": "Stop 28",
-      "manualCustomized": true
+      "manualCustomized": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738225772",
@@ -852,7 +931,9 @@
         "line-1791925108817"
       ],
       "subname": "Gogolevskaya",
-      "manualCustomized": true
+      "manualCustomized": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738228058",
@@ -873,7 +954,9 @@
         "line-1791737881316"
       ],
       "manualCustomized": true,
-      "subname": "Stop 30"
+      "subname": "Stop 30",
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738229258",
@@ -894,7 +977,9 @@
         "line-1791737881316"
       ],
       "manualCustomized": true,
-      "subname": "Stop 31"
+      "subname": "Stop 31",
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738230212",
@@ -914,7 +999,9 @@
       "lineIds": [
         "line-1791737881316"
       ],
-      "subname": "Stop 32"
+      "subname": "Stop 32",
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738236750",
@@ -935,7 +1022,9 @@
         "line-1791737881316"
       ],
       "manualCustomized": true,
-      "subname": "Stop 33"
+      "subname": "Stop 33",
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791738240536",
@@ -956,7 +1045,9 @@
         "line-1791737855264"
       ],
       "manualCustomized": true,
-      "subname": "Stop 37"
+      "subname": "Stop 37",
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791925209483",
@@ -977,7 +1068,9 @@
         "line-1791925108817"
       ],
       "subname": "Stop 36",
-      "manualCustomized": true
+      "manualCustomized": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1791925210671",
@@ -998,7 +1091,9 @@
         "line-1791925108817"
       ],
       "subname": "Stop 37",
-      "manualCustomized": true
+      "manualCustomized": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1792757335358-ixxb",
@@ -1018,7 +1113,9 @@
       ],
       "autoLineId": "line-1791737855264",
       "manualCustomized": true,
-      "subname": "1 - Remaining 1"
+      "subname": "1 - Remaining 1",
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1792757335358-eykl",
@@ -1038,7 +1135,9 @@
       ],
       "autoLineId": "line-1791737855264",
       "manualCustomized": true,
-      "subname": "1 - Remaining 2"
+      "subname": "1 - Remaining 2",
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1792757335358-vp4t",
@@ -1058,7 +1157,9 @@
       ],
       "autoLineId": "line-1791737855264",
       "manualCustomized": true,
-      "subname": "1 - Remaining 3"
+      "subname": "1 - Remaining 3",
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1792757335358-e6fd",
@@ -1078,7 +1179,9 @@
       ],
       "autoLineId": "line-1791737855264",
       "manualCustomized": true,
-      "subname": "1 - Remaining 5"
+      "subname": "1 - Remaining 5",
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1792757335358-7sna",
@@ -1098,7 +1201,9 @@
       ],
       "autoLineId": "line-1791737855264",
       "subname": "1 - Remaining 7",
-      "manualCustomized": true
+      "manualCustomized": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1792757335358-z5k9",
@@ -1117,7 +1222,9 @@
         "line-1791737855264"
       ],
       "autoLineId": "line-1791737855264",
-      "subname": "1 - Remaining 8"
+      "subname": "1 - Remaining 8",
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1792757335358-0tl0",
@@ -1137,7 +1244,9 @@
       ],
       "autoLineId": "line-1791737855264",
       "subname": "1 - Remaining 9",
-      "manualCustomized": true
+      "manualCustomized": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1792758106177",
@@ -1159,7 +1268,9 @@
       ],
       "manualCustomized": true,
       "showBadges": false,
-      "subname": "Krivichi-2"
+      "subname": "Krivichi-2",
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1792821424467",
@@ -1181,7 +1292,9 @@
         "line-1791737881316"
       ],
       "manualCustomized": true,
-      "subname": "Stop 39"
+      "subname": "Stop 39",
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1792821569852",
@@ -1203,7 +1316,9 @@
         "line-1791925108817"
       ],
       "manualCustomized": true,
-      "subname": "Stop 40"
+      "subname": "Stop 40",
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     },
     {
       "id": "st-1794066071461",
@@ -1228,7 +1343,9 @@
         "line-1791925108817"
       ],
       "manualCustomized": true,
-      "isManual": true
+      "isManual": true,
+      "excludedLineIds": [],
+      "manualIncludedIds": []
     }
   ],
   "terminals": [
@@ -2236,8 +2353,8 @@
       "labelSize": 12,
       "labelColor": "#0f172a",
       "sublabelColor": "#94a3b8",
-      "x": 77,
-      "y": 337,
+      "x": 93,
+      "y": 322,
       "angle": 0,
       "color": "#ffffff",
       "size": 47,
@@ -2249,13 +2366,17 @@
       "i18n": {
         "en": "Help with development",
         "en_sub": "Object 1"
+      },
+      "iconSvgData": {
+        "viewBox": "0 0 24 24",
+        "inner": "<path xmlns=\"http://www.w3.org/2000/svg\" d=\"m12 21.35-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z\"/>"
       }
     }
   ],
   "usedPalette": [],
   "isPanning": false,
-  "startPanX": 357.0757493063893,
-  "startPanY": 474.76825616613814,
+  "startPanX": 957.427890486189,
+  "startPanY": 647.648817318525,
   "draggingVertex": null,
   "draggingStation": null,
   "draggingTerminal": null,
