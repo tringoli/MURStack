@@ -441,11 +441,11 @@ async function createServer() {
   }
 
   httpServer.listen(PORT, '0.0.0.0', () => {
-    console.log(`MURS Maps server listening on http://localhost:${PORT}`);
+    console.log(`MURMaps server listening on http://localhost:${PORT}`);
   });
 }
 
 createServer().catch((err) => {
-  console.error('Failed to start MURS Maps server:', err);
+  console.error('Failed to start MURMaps server:', err);
   process.exit(1);
 });
