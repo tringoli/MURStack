@@ -1,0 +1,8 @@
+{
+  "name": "MURS Карты",
+  "description": "Онлайн-навигатор для сервера Minecraft MURS на основе BlueMap и MTR с расчётом маршрутов на транспорте, пешком и на СИМ, 3D-зданиями, адресами и редактором карты.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

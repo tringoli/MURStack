@@ -1,0 +1,201 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: var(--font-sans);
+  }
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Custom subtle scrollbars for Yandex-style sidebars */
+.murs-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.murs-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.murs-scroll::-webkit-scrollbar-thumb {
+  background: rgba(120, 120, 128, 0.28);
+  border-radius: 999px;
+}
+
+.murs-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(120, 120, 128, 0.45);
+}
+
+/* Unified UI Motion System (compositor-only transform + opacity, <= 260ms settling curves) */
+:root {
+  --murs-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --murs-ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes mursFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes mursSlideDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes mursSlideUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes mursSlideRight {
+  from {
+    opacity: 0;
+    transform: translate3d(-14px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes mursSlideLeft {
+  from {
+    opacity: 0;
+    transform: translate3d(14px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes mursPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translate3d(0, -4px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
+
+@keyframes mursTabEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.murs-anim-fade {
+  animation: mursFadeIn 190ms var(--murs-ease-out) both;
+}
+
+.murs-anim-slide-down {
+  animation: mursSlideDown 240ms var(--murs-ease-out) both;
+}
+
+.murs-anim-slide-up {
+  animation: mursSlideUp 240ms var(--murs-ease-out) both;
+}
+
+.murs-anim-slide-right {
+  animation: mursSlideRight 260ms var(--murs-ease-out) both;
+}
+
+.murs-anim-slide-left {
+  animation: mursSlideLeft 240ms var(--murs-ease-out) both;
+}
+
+.murs-anim-pop {
+  animation: mursPopIn 180ms var(--murs-ease-spring) both;
+}
+
+.murs-anim-tab {
+  animation: mursTabEnter 200ms var(--murs-ease-out) both;
+}
+
+/* Smooth tactile micro-interactions across all interactive controls */
+@layer base {
+  button,
+  [role='button'],
+  select,
+  input,
+  textarea,
+  label {
+    transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+    transition-duration: 160ms;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  button:not(:disabled):active {
+    transform: scale(0.97);
+  }
+
+  input[type='checkbox']:not(:disabled):active {
+    transform: scale(0.92);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .murs-anim-fade,
+  .murs-anim-slide-down,
+  .murs-anim-slide-up,
+  .murs-anim-slide-right,
+  .murs-anim-slide-left,
+  .murs-anim-pop,
+  .murs-anim-tab {
+    animation: none !important;
+  }
+
+  button,
+  [role='button'],
+  select,
+  input,
+  textarea,
+  label {
+    transition-duration: 1ms !important;
+  }
+
+  button:not(:disabled):active,
+  input[type='checkbox']:not(:disabled):active {
+    transform: none !important;
+  }
+}
+
