@@ -6,15 +6,17 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const isBundledDist = path.basename(__dirname) === 'dist';
+const APP_ROOT = isBundledDist ? path.resolve(__dirname, '..') : __dirname;
 
 const PORT = Number(process.env.PORT || 3000);
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === 'production' || isBundledDist;
 
 const MTR_STATIONS_URL = 'https://map.murs-mc.ru/mtr/api/map/stations-and-routes';
 const MTR_DEPARTURES_URL = 'https://map.murs-mc.ru/mtr/api/map/departures';
 const BLUEMAP_SETTINGS_URL = 'https://bluemap.murs-mc.ru/maps/world/settings.json';
 
-const DATA_DIR = path.resolve(__dirname, 'data');
+const DATA_DIR = path.resolve(APP_ROOT, 'data');
 const EDITS_FILE = path.join(DATA_DIR, 'murs-edits.json');
 
 interface CacheEntry<T> {
@@ -103,7 +105,11 @@ async function createServer() {
   app.use(express.json({ limit: '64mb' }));
 
   app.get('/api/health', (_req, res) => {
-    res.json({ ok: true, service: 'murs-maps' });
+    res.json({
+      ok: true,
+      service: 'murmaps',
+      mode: isProduction ? 'production' : 'development',
+    });
   });
 
   app.get('/api/mtr/stations-and-routes', async (_req, res) => {
@@ -433,15 +439,24 @@ async function createServer() {
     });
     app.use(vite.middlewares);
   } else {
-    const distDir = path.resolve(__dirname, 'dist');
+    const distDir = path.resolve(APP_ROOT, 'dist');
+    const indexHtmlPath = path.join(distDir, 'index.html');
     app.use(express.static(distDir));
     app.get('*', (_req, res) => {
-      res.sendFile(path.join(distDir, 'index.html'));
+      if (!fs.existsSync(indexHtmlPath)) {
+        res
+          .status(503)
+          .send('MURMaps client bundle is missing. Run "npm run build" first.');
+        return;
+      }
+      res.sendFile(indexHtmlPath);
     });
   }
 
   httpServer.listen(PORT, '0.0.0.0', () => {
-    console.log(`MURMaps server listening on http://localhost:${PORT}`);
+    console.log(
+      `MURMaps server listening on http://localhost:${PORT} (${isProduction ? 'production' : 'development'})`
+    );
   });
 }
 

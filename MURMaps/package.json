@@ -6,10 +6,11 @@
   "scripts": {
     "dev": "tsx server.ts",
     "local": "node start-local.mjs",
+    "local:dev": "node start-local.mjs --dev",
     "start": "node server.ts",
-    "build": "vite build",
+    "build": "vite build && node scripts/build-server.mjs",
     "preview": "vite preview",
-    "clean": "rm -rf dist server.js",
+    "clean": "node -e \"import('node:fs').then(fs => { fs.rmSync('dist', { recursive: true, force: true }); fs.rmSync('server.js', { force: true }); })\"",
     "lint": "tsc --noEmit"
   },
   "dependencies": {

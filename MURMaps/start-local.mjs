@@ -9,12 +9,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const args = new Set(process.argv.slice(2));
-const useProd = args.has('--prod');
+const useDev = args.has('--dev');
 const forceBuild = args.has('--build');
 const forceReinstall = args.has('--reinstall');
 const noOpen = args.has('--no-open');
 
-const majorNode = Number(process.versions.node.split('.')[0] || '0');
+const [majorNode, minorNode] = process.versions.node
+  .split('.')
+  .map((part) => Number.parseInt(part, 10) || 0);
+
 if (majorNode < 18) {
   console.error(
     `[MURMaps] Требуется Node.js 18 или новее (установлена версия ${process.versions.node}).`
@@ -24,6 +27,47 @@ if (majorNode < 18) {
 
 const isWin = process.platform === 'win32';
 const currentPlatformKey = `${process.platform}-${process.arch}`;
+
+export function supportsNativeTypeScript(major = majorNode, minor = minorNode) {
+  return major > 22 || (major === 22 && minor >= 6);
+}
+
+function getEsbuildBinaryRelativePath(platform) {
+  return platform === 'win32' ? 'esbuild.exe' : path.join('bin', 'esbuild');
+}
+
+function checkEsbuildScope(scopeDir, platform, arch, label) {
+  const platformKey = `${platform}-${arch}`;
+  if (!fs.existsSync(scopeDir)) {
+    return {
+      status: 'platform-mismatch',
+      reason: `Отсутствует нативный бинарник ${label}/${platformKey}`,
+    };
+  }
+  try {
+    const entries = fs.readdirSync(scopeDir);
+    if (!entries.includes(platformKey)) {
+      const found = entries.length > 0 ? entries[0] : 'пусто';
+      return {
+        status: 'platform-mismatch',
+        reason: `Обнаружен ${label}/${found} вместо ${label}/${platformKey}`,
+      };
+    }
+    const binPath = path.join(scopeDir, platformKey, getEsbuildBinaryRelativePath(platform));
+    if (!fs.existsSync(binPath)) {
+      return {
+        status: 'platform-mismatch',
+        reason: `Не найден исполняемый файл ${label}/${platformKey}/${getEsbuildBinaryRelativePath(platform)}`,
+      };
+    }
+  } catch {
+    return {
+      status: 'platform-mismatch',
+      reason: `Не удалось прочитать ${label}`,
+    };
+  }
+  return null;
+}
 
 /**
  * Checks whether `node_modules` is missing, incomplete, or contains native binaries
@@ -55,20 +99,26 @@ export function inspectNodeModulesState(
     }
   }
 
-  // 1. Check @esbuild native binary (required by tsx & vite)
-  const esbuildScope = path.join(nodeModulesDir, '@esbuild');
-  if (fs.existsSync(esbuildScope)) {
-    try {
-      const entries = fs.readdirSync(esbuildScope);
-      if (entries.length > 0 && !entries.includes(platformKey)) {
-        return {
-          status: 'platform-mismatch',
-          reason: `Обнаружен @esbuild/${entries[0]} вместо @esbuild/${platformKey}`,
-        };
-      }
-    } catch {
-      // Ignore read errors
-    }
+  // 1. Check @esbuild native binary (root and nested inside tsx if present)
+  if (fs.existsSync(path.join(nodeModulesDir, 'esbuild', 'package.json'))) {
+    const rootMismatch = checkEsbuildScope(
+      path.join(nodeModulesDir, '@esbuild'),
+      platform,
+      arch,
+      '@esbuild'
+    );
+    if (rootMismatch) return rootMismatch;
+  }
+
+  const nestedTsxEsbuild = path.join(nodeModulesDir, 'tsx', 'node_modules', '@esbuild');
+  if (fs.existsSync(nestedTsxEsbuild)) {
+    const nestedMismatch = checkEsbuildScope(
+      nestedTsxEsbuild,
+      platform,
+      arch,
+      'tsx/@esbuild'
+    );
+    if (nestedMismatch) return nestedMismatch;
   }
 
   // 2. Check @rolldown native bindings (required by Vite 8)
@@ -110,10 +160,11 @@ export function inspectNodeModulesState(
     }
   }
 
-  // 4. Verify core runtime packages exist
+  // 4. Verify core build/dev packages exist
   const requiredFiles = [
     path.join(nodeModulesDir, 'express', 'package.json'),
     path.join(nodeModulesDir, 'vite', 'package.json'),
+    path.join(nodeModulesDir, 'esbuild', 'package.json'),
     path.join(nodeModulesDir, 'tsx', 'dist', 'cli.mjs'),
   ];
   for (const reqFile of requiredFiles) {
@@ -126,6 +177,56 @@ export function inspectNodeModulesState(
   }
 
   return { status: 'ok', reason: '' };
+}
+
+/**
+ * Resolves whether MURMaps can boot straight into zero-native-binary production mode
+ * (only requiring pure-JS `express` + `dist/`), or needs native deps/build/dev mode.
+ */
+export function resolveLaunchMode(rootDir, options = {}) {
+  const {
+    dev = false,
+    build = false,
+    reinstall = false,
+    nodeMajor = majorNode,
+    nodeMinor = minorNode,
+  } = options;
+
+  const distIndex = path.join(rootDir, 'dist', 'index.html');
+  const distServer = path.join(rootDir, 'dist', 'server.mjs');
+  const hasDistClient = fs.existsSync(distIndex);
+  const hasDistServer = fs.existsSync(distServer);
+  const nativeTs = supportsNativeTypeScript(nodeMajor, nodeMinor);
+
+  if (dev) {
+    return {
+      mode: 'development',
+      needsBuild: false,
+      needsNativeDeps: true,
+      serverEntry: path.join(rootDir, 'server.ts'),
+      useDirectNode: nativeTs,
+    };
+  }
+
+  // Fast portable production launch: if dist/ is already built, run pure JS directly
+  // without touching esbuild, tsx, vite, or any OS-specific native bindings!
+  if (hasDistClient && !build && !reinstall && (hasDistServer || nativeTs)) {
+    return {
+      mode: 'production',
+      needsBuild: false,
+      needsNativeDeps: false,
+      serverEntry: hasDistServer ? distServer : path.join(rootDir, 'server.ts'),
+      useDirectNode: true,
+    };
+  }
+
+  return {
+    mode: 'production',
+    needsBuild: true,
+    needsNativeDeps: true,
+    serverEntry: distServer,
+    useDirectNode: true,
+  };
 }
 
 function runNpm(npmArgs, extraEnv = {}) {
@@ -202,6 +303,24 @@ function openBrowser(url) {
   }
 }
 
+async function ensurePureJsExpress(nodeModulesDir) {
+  const expressPkg = path.join(nodeModulesDir, 'express', 'package.json');
+  if (fs.existsSync(expressPkg)) {
+    return;
+  }
+  console.log('[MURMaps] Установка зависимостей (npm install)...');
+  await runNpm(['install', '--include=optional', '--no-audit', '--no-fund']);
+  try {
+    fs.writeFileSync(
+      path.join(nodeModulesDir, '.murmaps-platform'),
+      `${currentPlatformKey}\n`,
+      'utf8'
+    );
+  } catch {
+    // Non-fatal
+  }
+}
+
 async function ensureNativeDependencies(nodeModulesDir) {
   const state = forceReinstall
     ? { status: 'platform-mismatch', reason: 'Запрошена переустановка (--reinstall)' }
@@ -234,10 +353,14 @@ async function ensureNativeDependencies(nodeModulesDir) {
     console.log(`[MURMaps] ${state.reason}. Установка зависимостей (npm install)...`);
   }
 
-  await runNpm(['install', '--no-audit', '--no-fund']);
+  await runNpm(['install', '--include=optional', '--no-audit', '--no-fund']);
 
   try {
-    fs.writeFileSync(path.join(nodeModulesDir, '.murmaps-platform'), `${currentPlatformKey}\n`, 'utf8');
+    fs.writeFileSync(
+      path.join(nodeModulesDir, '.murmaps-platform'),
+      `${currentPlatformKey}\n`,
+      'utf8'
+    );
   } catch {
     // Non-fatal
   }
@@ -245,11 +368,20 @@ async function ensureNativeDependencies(nodeModulesDir) {
 
 async function main() {
   const nodeModulesDir = path.join(__dirname, 'node_modules');
-  await ensureNativeDependencies(nodeModulesDir);
+  const plan = resolveLaunchMode(__dirname, {
+    dev: useDev,
+    build: forceBuild,
+    reinstall: forceReinstall,
+  });
 
-  const distDir = path.join(__dirname, 'dist');
-  if (forceBuild || (useProd && !fs.existsSync(distDir))) {
-    console.log('[MURMaps] Сборка клиентского бандла (npm run build)...');
+  if (plan.needsNativeDeps) {
+    await ensureNativeDependencies(nodeModulesDir);
+  } else {
+    await ensurePureJsExpress(nodeModulesDir);
+  }
+
+  if (plan.needsBuild) {
+    console.log('[MURMaps] Сборка портативного бандла (npm run build)...');
     await runNpm(['run', 'build']);
   }
 
@@ -259,29 +391,33 @@ async function main() {
     console.log(`[MURMaps] Порт ${desiredPort} занят — используется свободный порт ${port}.`);
   }
 
-  const tsxCli = path.join(__dirname, 'node_modules', 'tsx', 'dist', 'cli.mjs');
-  const serverEntry = path.join(__dirname, 'server.ts');
-  const canRunTsxCli = fs.existsSync(tsxCli);
+  let execPath = process.execPath;
+  let finalArgs = [plan.serverEntry];
 
-  const execPath = canRunTsxCli
-    ? process.execPath
-    : isWin
-    ? 'cmd.exe'
-    : 'npx';
-  const finalArgs = canRunTsxCli
-    ? [tsxCli, serverEntry]
-    : isWin
-    ? ['/d', '/s', '/c', 'npx tsx server.ts']
-    : ['tsx', 'server.ts'];
+  if (!plan.useDirectNode) {
+    const tsxCli = path.join(__dirname, 'node_modules', 'tsx', 'dist', 'cli.mjs');
+    if (fs.existsSync(tsxCli)) {
+      execPath = process.execPath;
+      finalArgs = [tsxCli, plan.serverEntry];
+    } else if (isWin) {
+      execPath = 'cmd.exe';
+      finalArgs = ['/d', '/s', '/c', 'npx tsx server.ts'];
+    } else {
+      execPath = 'npx';
+      finalArgs = ['tsx', 'server.ts'];
+    }
+  }
 
   const env = {
     ...process.env,
     PORT: String(port),
-    NODE_ENV: useProd ? 'production' : process.env.NODE_ENV || 'development',
+    NODE_ENV: plan.mode,
   };
 
   const url = `http://localhost:${port}`;
-  console.log(`[MURMaps] Запуск локального сервера на ${url} (${currentPlatformKey})...`);
+  console.log(
+    `[MURMaps] Запуск сервера на ${url} (${plan.mode}, ${currentPlatformKey})...`
+  );
 
   const serverProc = spawn(execPath, finalArgs, {
     cwd: __dirname,
